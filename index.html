@@ -1,64 +1,33 @@
 <!doctype html>
-<div>
-<h1>PixelAI — Offline Chatbot (Enhanced)</h1>
-<p class="small">All client-side. Persistent memory, streaming replies, randomized case option, themes, export.</p>
-</div>
-
-
-<div class="header-actions">
-<button id="themeBtn" class="theme-toggle" title="Toggle theme">Toggle Theme</button>
-<button id="stylizeBtn" class="theme-toggle" title="Toggle randomized case">Stylize Case</button>
-<button id="downloadBtn" class="theme-toggle" title="Download chat JSON">Export</button>
-<button id="clearMemory" class="theme-toggle" title="Clear saved memory">Clear Memory</button>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PixelAI — Conscious Offline Chatbot</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+<header class="topbar">
+<div class="logo">🤖 PixelAI</div>
+<div class="actions">
+<button id="themeBtn" title="Toggle theme">🌗</button>
+<button id="stylizeBtn" title="Toggle case">🔤</button>
+<button id="downloadBtn" title="Export memory">💾</button>
+<button id="clearMemory" title="Clear memory">🗑️</button>
 </div>
 </header>
 
 
-<main>
-<section id="chatPanel" aria-live="polite" aria-label="Chat messages"></section>
+<main id="chatPanel"></main>
 
 
-<aside id="side">
-<div class="kv"><strong>Mode</strong><span class="small">Offline • Local only</span></div>
-<div class="kv"><strong>Personality</strong><span class="small" id="personaVibe">Quirky • Helpful</span></div>
-<div class="kv"><strong>Name</strong><span id="savedName" class="small">(not set)</span></div>
-<div class="kv"><strong>Likes</strong><span id="savedLikes" class="small">—</span></div>
-
-
-<div class="quick-prompts">
-<div class="small">Quick prompts</div>
-<div class="kb" id="suggestions"></div>
-</div>
-
-
-<div class="toolbar">
-<button id="copyLast" class="pill">Copy last reply</button>
-<button id="downloadChat" class="pill">Download chat</button>
-<button id="clearChat" class="pill">Clear chat</button>
-</div>
-
-
-<hr />
-<div class="small">Notes</div>
-<ul class="small">
-<li>Everything is stored locally in your browser (<code>localStorage</code>).</li>
-<li>To publish: save these files and push to your GitHub Pages repo.</li>
-<li>No external servers or APIs; works fully offline after initial load.</li>
-</ul>
-</aside>
-</main>
-
-
-<div class="composer">
-<input id="input" type="text" placeholder="Ask something... (Enter to send)" autocomplete="off" />
-<button id="send">Send</button>
-</div>
-
-
-<footer>
-<div class="small">© PixelAI — Client-side demo</div>
-<div class="small">Built for GitHub Pages</div>
+<footer class="composer">
+<input id="input" type="text" placeholder="Type a message..." autocomplete="off" />
+<button id="send">➤</button>
 </footer>
+</div>
 
 
 <script src="app.js"></script>
