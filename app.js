@@ -151,6 +151,22 @@ function addResizers(win) {
       };
 
       document.addEventListener('mousemove', onMouseMove);
+function openApp(app) {
+  let appContent = "";
+  if (app === "notepad") {
+    appContent = "<textarea style='width:100%;height:100%;'></textarea>";
+  } else if (app === "browser") {
+    appContent = "<iframe src='https://example.com'></iframe>";
+  } else if (app === "explorer") {
+    appContent = "<div style='padding:10px;'>📁 File Explorer (mock)</div>";
+  } else if (app === "settings") {
+    appContent = "<div style='padding:10px;'>⚙️ Settings Panel (mock)</div>";
+  } else {
+    appContent = "<div style='padding:10px;'>🚧 App under construction</div>";
+  }
+  createWindow(app, appContent);
+}
+
       document.addEventListener('mouseup', onMouseUp);
     });
   });
