@@ -1,460 +1,334 @@
-<!DOCTYPE html>
+# PixelAI — Split files
+
+This document contains the three files you asked for: **index.html**, **style.css**, and **app.js**. Copy each code block into separate files in your repo and publish to GitHub Pages (or open locally) — no APIs, no servers, fully client-side.
+
+---
+
+## index.html
+
+```html
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PixelAI — GitHub Pages Offline Chatbot</title>
-  <style>
-    :root {
-      --bg: #0f1226;
-      --panel: #161a36;
-      --accent: #7c5cff;
-      --accent-2: #22d3ee;
-      --text: #e6e6f0;
-      --muted: #aab;
-      --user: #3b82f6;
-      --bot: #7c5cff;
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 600px at 10% -10%, #1a1f47 0%, var(--bg) 50%);
-      color: var(--text);
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 12px;
-      padding: 16px;
-    }
-    header {
-      display: flex; align-items: center; gap: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0));
-      border: 1px solid rgba(255,255,255,0.07);
-      padding: 12px 16px;
-      border-radius: 16px;
-      backdrop-filter: blur(6px);
-    }
-    header .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
-    header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: 0.3px; }
-    header p { margin: 0; color: var(--muted); font-size: 12px; }
-
-    #chat {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 16px;
-      overflow: auto;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-
-    .bubble {
-      max-width: min(78ch, 90%);
-      padding: 10px 14px;
-      border-radius: 16px;
-      margin: 6px 0;
-      line-height: 1.35;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .from-user { margin-left: auto; background: linear-gradient(180deg, rgba(59,130,246,0.18), rgba(59,130,246,0.10)); border-color: rgba(59,130,246,0.3); }
-    .from-bot { margin-right: auto; background: linear-gradient(180deg, rgba(124,92,255,0.22), rgba(124,92,255,0.10)); border-color: rgba(124,92,255,0.35); }
-
-    .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
-    #input {
-      background: var(--panel);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
-      outline: none; border-radius: 14px; padding: 12px 14px; font-size: 15px;
-    }
-    #send {
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      color: #0b0b14; border: none; font-weight: 800; letter-spacing: .3px;
-      padding: 0 16px; border-radius: 12px; cursor: pointer;
-      box-shadow: 0 6px 18px rgba(124,92,255,.35), inset 0 1px 0 rgba(255,255,255,.25);
-    }
-    #send:active { transform: translateY(1px); }
-
-    .typing { display: inline-flex; align-items: center; gap: 6px; }
-    .typing .dot { width: 6px; height: 6px; border-radius: 50%; background: #cfd1ff; opacity: .9; animation: bounce 1.3s infinite; }
-    .typing .dot:nth-child(2) { animation-delay: .15s; }
-    .typing .dot:nth-child(3) { animation-delay: .3s; }
-    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
-
-    footer { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 12px; }
-    .pill { padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); }
-    .kb {
-      margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;
-    }
-    .kb button {
-      background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px; padding: 6px 10px; cursor: pointer; font-size: 12px;
-    }
-    .kb button:hover { background: rgba(255,255,255,0.1); }
-    .small { font-size: 12px; color: var(--muted); }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PixelAI — Offline Chatbot (Enhanced)</title>
+  <meta name="description" content="Fully client-side AI-like chatbot for GitHub Pages — no APIs, no servers. Persistent memory, realistic typing, randomized case mode, themes, export." />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <div class="dot" aria-hidden="true"></div>
+    <div class="accent-dot" aria-hidden="true"></div>
     <div>
-      <h1>PixelAI</h1>
-      <p class="small">Self‑contained, no APIs. Lives on GitHub Pages.</p>
+      <h1>PixelAI — Offline Chatbot (Enhanced)</h1>
+      <p class="small">All client-side. Persistent memory, streaming replies, randomized case option, themes, export.</p>
+    </div>
+
+    <div class="header-actions">
+      <button id="themeBtn" class="theme-toggle" title="Toggle theme">Toggle Theme</button>
+      <button id="stylizeBtn" class="theme-toggle" title="Toggle randomized case">Stylize Case</button>
+      <button id="downloadBtn" class="theme-toggle" title="Download chat JSON">Export</button>
+      <button id="clearMemory" class="theme-toggle" title="Clear saved memory">Clear Memory</button>
     </div>
   </header>
 
-  <main id="chat" aria-live="polite" aria-label="Chat messages"></main>
+  <main>
+    <section id="chatPanel" aria-live="polite" aria-label="Chat messages"></section>
 
-  <div class="kb" id="suggestions"></div>
+    <aside id="side">
+      <div class="kv"><strong>Mode</strong><span class="small">Offline • Local only</span></div>
+      <div class="kv"><strong>Personality</strong><span class="small" id="personaVibe">Quirky • Helpful</span></div>
+      <div class="kv"><strong>Name</strong><span id="savedName" class="small">(not set)</span></div>
+      <div class="kv"><strong>Likes</strong><span id="savedLikes" class="small">—</span></div>
 
-  <div class="row">
-    <input id="input" type="text" placeholder="Type here… (no APIs needed)" autocomplete="off" />
-    <button id="send" aria-label="Send">Send</button>
+      <div class="quick-prompts">
+        <div class="small">Quick prompts</div>
+        <div class="kb" id="suggestions"></div>
+      </div>
+
+      <div class="toolbar">
+        <button id="copyLast" class="pill">Copy last reply</button>
+        <button id="downloadChat" class="pill">Download chat</button>
+        <button id="clearChat" class="pill">Clear chat</button>
+      </div>
+
+      <hr />
+      <div class="small">Notes</div>
+      <ul class="small">
+        <li>Everything is stored locally in your browser (<code>localStorage</code>).</li>
+        <li>To publish: save these files and push to your GitHub Pages repo.</li>
+        <li>No external servers or APIs; works fully offline after initial load.</li>
+      </ul>
+    </aside>
+  </main>
+
+  <div class="composer">
+    <input id="input" type="text" placeholder="Ask something... (Enter to send)" autocomplete="off" />
+    <button id="send">Send</button>
   </div>
-  
+
   <footer>
-    <span class="pill">Mode: Offline • Personality: Quirky Helpful</span>
-    <span class="small">© Yours, on GitHub Pages</span>
+    <div class="small">© PixelAI — Client-side demo</div>
+    <div class="small">Built for GitHub Pages</div>
   </footer>
 
-  <script>
-  // -----------------------
-  // PixelAI — Offline Brain
-  // -----------------------
-  // No external APIs. All logic runs in the browser.
-
-  const PixelAI = (() => {
-    // Personality knobs (tweak freely)
-    const persona = {
-      name: "PixelAI",
-      vibe: ["quirky", "helpful", "slightly sassy"],
-      emoji: ["✨", "🤖", "💡", "🧠", "⚙️", "🚀"],
-      signOffs: [
-        "Need more deets? I gotchu.",
-        "Curiosity mode: always on.",
-        "Ping me with another one!",
-      ],
-      typingBaseMs: 500,      // base typing delay
-      typingPerCharMs: 25,     // additional per character
-      typingMaxMs: 2500        // cap
-    };
-
-    // Tiny memory (persists per tab session)
-    const memory = {
-      name: null,
-      likes: new Set(),
-      facts: new Map(),
-      history: [] // {role, text}
-    };
-
-    // Utility: normalize input for matching
-    function norm(s){
-      return s
-        .toLowerCase()
-        .replace(/[\p{P}\p{S}]/gu, " ") // drop punctuation/symbols
-        .replace(/\s+/g, " ")
-        .trim();
-    }
-
-    // Utility: Levenshtein distance for fuzzy matching
-    function editDistance(a, b){
-      const m = a.length, n = b.length;
-      const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));
-      for (let i=0;i<=m;i++) dp[i][0] = i;
-      for (let j=0;j<=n;j++) dp[0][j] = j;
-      for (let i=1;i<=m;i++){
-        for (let j=1;j<=n;j++){
-          const cost = a[i-1] === b[j-1] ? 0 : 1;
-          dp[i][j] = Math.min(
-            dp[i-1][j] + 1,
-            dp[i][j-1] + 1,
-            dp[i-1][j-1] + cost
-          );
-        }
-      }
-      return dp[m][n];
-    }
-
-    // Knowledge base: patterns -> responses (pick randomly)
-    // Case-insensitive via regex /i, also matched on normalized text
-    const KB = [
-      {
-        tag: "greeting",
-        patterns: [/^(hi|hello|hey|yo|sup)\b/i, /\bgood (morning|afternoon|evening)\b/i],
-        responses: [
-          "Hey there! ${emoji} What are we building today?",
-          "Hello! ${emoji} Ready to nerd out?",
-          "Heeey! ${emoji} Ask me anything—offline and speedy.",
-        ]
-      },
-      {
-        tag: "name_learn",
-        patterns: [/(?:i am|i'm|my name is)\s+([a-z\-\s']{2,})/i],
-        responses: [
-          "Nice to meet you, ${name}! ${emoji}",
-          "Locked in. I’ll call you ${name}. ${emoji}",
-          "Got it—${name} it is. ${emoji}"
-        ],
-        onMatch: (m) => { memory.name = capWords(m[1]); }
-      },
-      {
-        tag: "ask_name",
-        patterns: [/^(what'?s|what is) your name\b/i, /who are you\b/i],
-        responses: [
-          "I’m ${self}, an all‑local chat brain.",
-          "${self} here—100% client‑side. ${emoji}",
-          "Name’s ${self}. No servers, just vibes.",
-        ]
-      },
-      {
-        tag: "time",
-        patterns: [/\b(time|current time|what time is it)\b/i],
-        responses: [
-          () => `According to your device, it\'s ${new Date().toLocaleTimeString()} ${pick(["sharp","on the dot","ish"])}. ${pickEmoji()}`
-        ]
-      },
-      {
-        tag: "date",
-        patterns: [/\b(date|today|what day is it)\b/i],
-        responses: [
-          () => `Today is ${new Date().toLocaleDateString()}—mark the moment. ${pickEmoji()}`
-        ]
-      },
-      {
-        tag: "like_record",
-        patterns: [/i like\s+([a-z0-9\-\s']{2,})/i],
-        responses: [
-          "Adding ${topic} to your like list. Respect!",
-          "${topic}? Strong choice. Noted. ${emoji}",
-          "Logged that you like ${topic}. ${emoji}"
-        ],
-        onMatch: (m) => { memory.likes.add(capWords(m[1])); }
-      },
-      {
-        tag: "dev_help",
-        patterns: [/\b(html|css|javascript|js|git|github|pages|deploy)\b/i],
-        responses: [
-          "If you\'re deploying on GitHub Pages: push to <code>main</code>, then Settings → Pages → Source: <code>Deploy from a branch</code>. Need the steps?",
-          "JS tip: keep logic modular. Want me to draft a snippet?",
-          "CSS trick: start mobile-first, then layer enhancements. Shall we sketch a layout?"
-        ]
-      },
-      {
-        tag: "compliment",
-        patterns: [/\b(thanks|thank you|ty|nice|cool|great|awesome|pog)\b/i],
-        responses: [
-          "Happy to help! ${emoji}",
-          "Anytime—keep the questions coming.",
-          "My circuits are blushing. ${emoji}"
-        ]
-      }
-    ];
-
-    // Fallback templates → "specific" sounding generative answers (offline)
-    const templates = [
-      {
-        when: /^(what is|define|meaning of)\b/i,
-        make: (q) => `Here\'s a compact take on “${q}”: a concept with key parts, typical use, and one example. Offline mode can\'t fetch sources, but I can outline steps or analogies if you want.`
-      },
-      {
-        when: /^(how (do|to)|steps? to)\b/i,
-        make: (q) => `A quick plan for “${q}”: 1) clarify goal, 2) list required bits, 3) smallest demo, 4) iterate with feedback, 5) document. Want me to draft the checklist?`
-      },
-      {
-        when: /^(why|reason)\b/i,
-        make: (q) => `Likely causes for “${q}”: configuration, environment, assumptions, or edge-cases. We can isolate by toggling one variable at a time.`
-      },
-      {
-        when: /\?$/,
-        make: (q) => `Gut answer to “${q}”: it depends on context. Give me a tad more detail and I\'ll tune a precise walkthrough—still all offline.`
-      }
-    ];
-
-    function capWords(s){
-      return s.replace(/\b\w/g, c => c.toUpperCase());
-    }
-
-    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-    function pickEmoji(){ return pick(persona.emoji); }
-
-    function format(template, ctx={}){
-      return String(template)
-        .replace(/\$\{self\}/g, persona.name)
-        .replace(/\$\{emoji\}/g, pickEmoji())
-        .replace(/\$\{name\}/g, memory.name || "friend")
-        .replace(/\$\{topic\}/g, ctx.topic || "that");
-    }
-
-    function bestKBMatch(text){
-      const n = norm(text);
-      // 1) Regex direct hit
-      for (const item of KB){
-        for (const p of item.patterns){
-          const m = text.match(p);
-          if (m) return { item, match: m };
-        }
-      }
-      // 2) Fuzzy vs canned cues
-      const cues = ["hello","hey","what time is it","what day is it","who are you","thank you"];
-      const scored = cues.map(c => ({ c, d: editDistance(n, c) }));
-      scored.sort((a,b)=>a.d-b.d);
-      if (scored[0] && scored[0].d <= Math.ceil(n.length*0.4)){
-        const cue = scored[0].c;
-        // map cue → KB tag
-        const tagMap = {
-          "hello":"greeting", "hey":"greeting",
-          "what time is it":"time",
-          "what day is it":"date",
-          "who are you":"ask_name",
-          "thank you":"compliment"
-        };
-        const tag = tagMap[cue];
-        const item = KB.find(x=>x.tag===tag);
-        if (item) return { item, match: null };
-      }
-      return null;
-    }
-
-    function generate(text){
-      memory.history.push({role:'user', text});
-
-      // 1) Try KB patterns
-      const kb = bestKBMatch(text);
-      if (kb){
-        const { item, match } = kb;
-        if (item.onMatch && match) item.onMatch(match);
-        const respTpl = pick(item.responses);
-        const ctx = {};
-        if (item.tag === 'like_record' && match) ctx.topic = capWords(match[1]);
-        const resp = typeof respTpl === 'function' ? respTpl(text) : format(respTpl, ctx);
-        memory.history.push({role:'assistant', text: resp});
-        return resp;
-      }
-
-      // 2) Try templated "specific" answers
-      const t = templates.find(t => t.when.test(text));
-      if (t){
-        const q = text.replace(/\s+/g,' ').trim();
-        const resp = t.make(q);
-        memory.history.push({role:'assistant', text: resp});
-        return resp;
-      }
-
-      // 3) Last resort: reflective + clarifying, but still concrete
-      const hints = extractKeywords(text);
-      const resp = `Here\'s what I caught: ${hints.join(', ') || 'general query'}. ` +
-        `Tell me the exact goal, input, and expected output, and I\'ll craft steps—all offline. ${pickEmoji()}`;
-      memory.history.push({role:'assistant', text: resp});
-      return resp;
-    }
-
-    function extractKeywords(text){
-      const words = norm(text).split(' ');
-      const stop = new Set("i me my we our you your the a an and or to of for with on in at is are be this that it if as by from what how why who when where which do does did can will shall should could would".split(' '));
-      const uniq = [];
-      for (const w of words){ if (w && !stop.has(w) && !uniq.includes(w)) uniq.push(w); }
-      return uniq.slice(0, 7);
-    }
-
-    function typingDelayFor(text){
-      const ms = persona.typingBaseMs + Math.min(text.length * persona.typingPerCharMs, persona.typingMaxMs);
-      // add a little randomness (±15%)
-      const jitter = 0.15 * ms;
-      return Math.round(ms + (Math.random()*2*jitter - jitter));
-    }
-
-    // Public API
-    return { persona, memory, generate, typingDelayFor };
-  })();
-
-  // -----------------------
-  // UI Wiring: bubbles & input
-  // -----------------------
-  const chat = document.getElementById('chat');
-  const input = document.getElementById('input');
-  const send = document.getElementById('send');
-  const suggestions = document.getElementById('suggestions');
-
-  function bubble(text, from='bot'){
-    const el = document.createElement('div');
-    el.className = `bubble from-${from === 'user' ? 'user' : 'bot'}`;
-    el.innerHTML = text;
-    chat.appendChild(el);
-    chat.scrollTop = chat.scrollHeight;
-    return el;
-  }
-
-  function typingBubble(){
-    const el = document.createElement('div');
-    el.className = 'bubble from-bot';
-    el.innerHTML = `<span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`;
-    chat.appendChild(el);
-    chat.scrollTop = chat.scrollHeight;
-    return el;
-  }
-
-  function sendUser(){
-    const text = input.value.trim();
-    if(!text) return;
-    bubble(escapeHtml(text), 'user');
-    input.value='';
-    input.focus();
-
-    const typer = typingBubble(); // show "generating" bubble
-
-    // Generate answer
-    const answer = PixelAI.generate(text);
-    const delay = PixelAI.typingDelayFor(answer);
-
-    setTimeout(() => {
-      typer.remove();
-      bubble(answer, 'bot');
-      // occasionally sign off with personality
-      if (Math.random() < 0.15) bubble(`<span class="small">${escapeHtml(pick(PixelAI.persona.signOffs))}</span>`, 'bot');
-    }, delay);
-  }
-
-  function escapeHtml(str){
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
-
-  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-
-  send.addEventListener('click', sendUser);
-  input.addEventListener('keydown', (e)=>{
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendUser();
-    }
-  });
-
-  // Quick suggestions (randomized, case-insensitive matching supported by engine)
-  const seeds = [
-    'Hello!',
-    'What\'s your name?',
-    'What time is it?',
-    'i like synthwave',
-    'Teach me a CSS trick',
-    'how to deploy on github pages',
-    'Define algorithm',
-    'Why is my code slow?',
-  ];
-  seeds.forEach(s => {
-    const b = document.createElement('button');
-    b.textContent = s;
-    b.addEventListener('click', ()=>{ input.value = s; sendUser(); });
-    suggestions.appendChild(b);
-  });
-
-  // Warm welcome
-  bubble(`Hey! I\'m <b>${PixelAI.persona.name}</b>—a fully client‑side chatbot. <br> No APIs, no servers, just JavaScript. Ask me anything. ${pick(PixelAI.persona.emoji)}`);
-
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
+```
+
+---
+
+## style.css
+
+```css
+:root{
+  --bg:#0f1226; --panel:#111322; --muted:#9aa; --text:#e9eefc; --accent:#7c5cff; --accent-2:#22d3ee;
+  --user:#3b82f6; --bot:#7c5cff; --radius:16px; --glass: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+body{display:flex;flex-direction:column;gap:12px;padding:16px;background:radial-gradient(900px 400px at 10% -10%,#1a1f47 0%,var(--bg) 50%);color:var(--text)}
+header{display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+header h1{margin:0;font-size:16px}
+header p{margin:0;color:var(--muted);font-size:13px}
+
+.accent-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.header-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+main{display:grid;grid-template-columns:1fr 320px;gap:12px;align-items:start}
+#chatPanel{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:14px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.05);height:64vh;overflow:auto}
+
+.bubble{max-width:min(80ch,88%);padding:10px 14px;border-radius:14px;margin:8px 0;line-height:1.4;white-space:pre-wrap}
+.from-user{margin-left:auto;background:linear-gradient(180deg,rgba(59,130,246,0.14),rgba(59,130,246,0.06));border:1px solid rgba(59,130,246,0.22)}
+.from-bot{margin-right:auto;background:linear-gradient(180deg,rgba(124,92,255,0.16),rgba(124,92,255,0.06));border:1px solid rgba(124,92,255,0.22)}
+
+.typing{display:inline-flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.85);animation:bounce 1.2s infinite}
+.dot:nth-child(2){animation-delay:.12s}.dot:nth-child(3){animation-delay:.24s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+#controls{display:flex;gap:8px;align-items:center}
+input[type='text'],textarea{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:var(--panel);color:var(--text);outline:none;width:100%}
+#send{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#06060a;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700}
+
+#side{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);height:64vh;overflow:auto}
+.kv{display:flex;justify-content:space-between;margin:6px 0;color:var(--muted);font-size:13px}
+.kb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.kb button{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer}
+.small{font-size:12px;color:var(--muted)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pill{padding:6px 10px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,0.04)}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,monospace;background:rgba(0,0,0,0.12);padding:6px;border-radius:8px}
+
+.meta{display:flex;gap:8px;align-items:center}
+footer{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+
+.theme-toggle{cursor:pointer;padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent}
+.hidden{display:none}
+.timestamp{font-size:11px;color:var(--muted);margin-top:6px}
+.bubble .metaAction{float:right;margin-left:8px;font-size:12px;cursor:pointer;color:var(--muted)}
+
+/* Light theme */
+.light{--bg:#f3f6ff;--panel:#ffffff;--text:#0b1220;--muted:#475569}
+.light body{background:var(--bg)}
+
+@media (max-width:900px){main{grid-template-columns:1fr}#side{order:2;height:30vh}#chatPanel{height:52vh}}
+
+.composer{display:flex;gap:8px;align-items:center;margin-top:8px}
+.composer input{flex:1}
+
+hr{opacity:.06;margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.04)}
+```
+
+---
+
+## app.js
+
+```javascript
+// Enhanced PixelAI app.js
+// Handles memory, KB matching, streaming replies, UI wiring
+
+const APP = (() => {
+  // Personality/config
+  const persona = {
+    name: 'PixelAI',
+    vibes: ['quirky','helpful','slightly sassy'],
+    emoji: ['✨','🤖','💡','🧠','⚙️','🚀'],
+    signOffs: ['Need more deets? I gotchu.','Curiosity mode: always on.','Ping me with another one!'],
+    typingBaseMs: 500,
+    typingPerCharMs: 20,
+    typingMaxMs: 3000,
+    streamChunkMs: 30 // per char reveal during streaming
+  };
+
+  // State + persistent memory
+  const state = {
+    stylize: false, // random case
+    theme: 'dark',
+    memory: {name:null, likes:[], facts:{}, history:[] }
+  };
+
+  // Helpers
+  const $ = (id)=>document.getElementById(id);
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+  function pickEmoji(){ return pick(persona.emoji); }
+
+  // Persist/load
+  function load(){
+    try{
+      const raw = localStorage.getItem('pixelai_mem');
+      if(raw) state.memory = JSON.parse(raw);
+    }catch(e){ console.warn('load failed',e) }
+    renderMemory();
+  }
+  function save(){ localStorage.setItem('pixelai_mem', JSON.stringify(state.memory)); renderMemory(); }
+  function clearMemory(){ localStorage.removeItem('pixelai_mem'); state.memory = {name:null,likes:[],facts:{},history:[]}; renderMemory(); }
+
+  function renderMemory(){
+    $('savedName').textContent = state.memory.name || '(not set)';
+    $('savedLikes').textContent = state.memory.likes.length ? state.memory.likes.join(', ') : '—';
+  }
+
+  // Utilities: normalize & edit distance
+  function norm(s){ return String(s||'').toLowerCase().replace(/[\p{P}\p{S}]/gu,' ').replace(/\s+/g,' ').trim(); }
+  function editDistance(a,b){ const m=a.length,n=b.length; const dp=Array.from({length:m+1},()=>Array(n+1).fill(0)); for(let i=0;i<=m;i++)dp[i][0]=i; for(let j=0;j<=n;j++)dp[0][j]=j; for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){ const c=a[i-1]===b[j-1]?0:1; dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+c);} return dp[m][n]; }
+
+  // KB: expanded
+  const KB = [
+    {tag:'greet', patterns:[/^(hi|hello|hey|yo)\b/i], responses:['Hey! ${emoji}','Hello — ready to tinker? ${emoji}','Hi there! What are we building today? ${emoji}']},
+    {tag:'name_set', patterns:[/(?:i am|i'm|my name is)\s+([a-z\-\s']{2,})/i], responses:['Nice to meet you, ${name}!','Got it — I\'ll call you ${name}. ${emoji}'], onMatch:(m)=>{ state.memory.name = capWords(m[1]); save(); }},
+    {tag:'ask_name', patterns:[/who are you\b/i, /what('?| i)s your name\b/i], responses:['I\'m ${self}, an offline chat brain. ${emoji}','${self} here — all client-side.']},
+    {tag:'time', patterns:[/\b(time|what time)\b/i], responses:[()=>`Your device says ${new Date().toLocaleTimeString()}. ${pickEmoji()}`]},
+    {tag:'date', patterns:[/\b(today|date|what day)\b/i], responses:[()=>`It\'s ${new Date().toLocaleDateString()}. ${pickEmoji()}`]},
+    {tag:'like', patterns:[/i like\s+([a-z0-9\-\s']{2,})/i], responses:['Nice — I added ${topic} to your likes. ${emoji}','${topic}? Got it. Noted in memory.'], onMatch:(m)=>{ const t=capWords(m[1]); if(!state.memory.likes.includes(t)) state.memory.likes.push(t); save(); }},
+    {tag:'deploy', patterns:[/github pages|deploy on github|deploy on github pages/i], responses:['Push an index.html to the repo (username.github.io), or enable Pages from branch in Settings → Pages. Need a checklist?']},
+    {tag:'html_help', patterns:[/\b(html|css|javascript|js)\b/i], responses:['Web tip: keep markup semantic. Want a demo snippet?']},
+    {tag:'debug', patterns:[/\b(error|bug|issue|crash)\b/i], responses:['Start by isolating the smallest failing case, console.log variables, and simplify until root cause appears. Want a debugging checklist?']},
+    {tag:'calc', patterns:[/^[0-9\s\+\-\*\/\.\(\)]+$/i], responses:[(q)=>{ try{ const sanitized=q.replace(/[^0-9\+\-\*\/\.\(\)\s]/g,''); const val = Function('return ('+sanitized+')')(); return `Result: ${val}`; }catch(e){return `Can't evaluate that expression.`;} } ]},
+    {tag:'thanks', patterns:[/\b(thanks|thank you|ty)\b/i], responses:['You\'re welcome! ${emoji}','Anytime — glad to help.']},
+    {tag:'joke', patterns:[/\b(joke|funny)\b/i], responses:['Why did the developer go broke? Because he used up all his cache. ${emoji}','I would tell a UDP joke, but you might not get it. ${emoji}']}
+  ];
+
+  const templates = [
+    {when:/^(what is|define|meaning of)\b/i, make:(q)=>`Compact definition for "${q}": (1) core idea, (2) typical use, (3) quick example — give me a topic and I'll fill these offline.`},
+    {when:/^(how to|how do i|steps to)\b/i, make:(q)=>`Quick plan for "${q}": 1) clarify goal, 2) list requirements, 3) minimal demo, 4) iterate. Want me to expand into code?`}
+  ];
+
+  function capWords(s){ return String(s||'').replace(/\b\w/g,c=>c.toUpperCase()); }
+
+  function matchKB(text){
+    for(const item of KB){
+      for(const p of item.patterns){
+        const m = text.match(p);
+        if(m) return {item,match:m};
+      }
+    }
+    // fuzzy small-cue
+    const cues=['hello','what time','today','who are you','thank you'];
+    const n=norm(text);
+    const scored=cues.map(c=>({c,d:editDistance(n,c)})).sort((a,b)=>a.d-b.d);
+    if(scored[0] && scored[0].d <= Math.ceil(n.length*0.4)){
+      const map={'hello':'greet','what time':'time','today':'date','who are you':'ask_name','thank you':'thanks'};
+      const tag=map[scored[0].c]; const item=KB.find(x=>x.tag===tag); if(item) return {item,match:null};
+    }
+    return null;
+  }
+
+  function format(template, ctx={}){
+    return String(template).replace(/\$\{self\}/g, persona.name).replace(/\$\{emoji\}/g,pickEmoji()).replace(/\$\{name\}/g,state.memory.name||'friend').replace(/\$\{topic\}/g,ctx.topic||'that');
+  }
+
+  // Main generator
+  function generateAnswer(input){
+    state.memory.history.push({role:'user',text:input,t:Date.now()}); save();
+    const kb = matchKB(input);
+    if(kb){ const {item,match} = kb; if(item.onMatch && match) item.onMatch(match); const tpl = pick(item.responses); const ctx = {}; if(item.tag==='like' && match) ctx.topic = capWords(match[1]); const resp = (typeof tpl==='function')? tpl(input) : format(tpl,ctx); state.memory.history.push({role:'assistant',text:resp,t:Date.now()}); save(); return resp; }
+    const t = templates.find(x=>x.when.test(input)); if(t){ const resp = t.make(input); state.memory.history.push({role:'assistant',text:resp,t:Date.now()}); save(); return resp; }
+    const hints = extractKeywords(input); const resp = `I noticed: ${hints.join(', ') || 'general query'}. Give me a goal and expected output and I\'ll craft steps—all offline. ${pickEmoji()}`; state.memory.history.push({role:'assistant',text:resp,t:Date.now()}); save(); return resp;
+  }
+
+  function extractKeywords(text){
+    const words = norm(text).split(' ');
+    const stop = new Set('i me my we our you your the a an and or to of for with on in at is are be this that it if as by from what how why who when where which do does did can will'.split(' '));
+    const uniq=[]; for(const w of words) if(w && !stop.has(w) && !uniq.includes(w)) uniq.push(w); return uniq.slice(0,7);
+  }
+
+  function typingDelayFor(text){ const ms = persona.typingBaseMs + Math.min(text.length * persona.typingPerCharMs, persona.typingMaxMs); const jitter = 0.12 * ms; return Math.round(ms + (Math.random()*2*jitter - jitter)); }
+
+  // UI
+  const chatEl = document.getElementById('chatPanel');
+
+  function bubbleHTML(text,role){
+    const el = document.createElement('div'); el.className = 'bubble ' + (role==='user'?'from-user':'from-bot'); el.innerHTML = escapeHtml(text); const meta = document.createElement('div'); meta.className='timestamp'; meta.textContent = new Date().toLocaleTimeString(); el.appendChild(meta); return el; }
+
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+  function stylizeCase(s){ if(!state.stylize) return s; return s.split('').map(ch => Math.random()<0.5 ? ch.toLowerCase() : ch.toUpperCase()).join(''); }
+
+  function appendUser(text){ const el = bubbleHTML(text,'user'); chatEl.appendChild(el); chatEl.scrollTop = chatEl.scrollHeight; }
+
+  function showThinking(){ const el = document.createElement('div'); el.className='bubble from-bot'; el.id='thinkingBubble'; el.innerHTML = `<span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><div class="timestamp">...</div>`; chatEl.appendChild(el); chatEl.scrollTop = chatEl.scrollHeight; return el; }
+
+  async function streamReply(fullText){
+    const tEl = document.getElementById('thinkingBubble'); if(tEl) tEl.remove();
+    const holder = document.createElement('div'); holder.className='bubble from-bot'; chatEl.appendChild(holder); chatEl.scrollTop = chatEl.scrollHeight;
+
+    const revealDelay = persona.streamChunkMs;
+    let out = '';
+    for(let i=0;i<fullText.length;i++){
+      out += fullText[i];
+      holder.innerHTML = escapeHtml(stylizeCase(out)) + `<div class="timestamp">${new Date().toLocaleTimeString()}</div>`;
+      chatEl.scrollTop = chatEl.scrollHeight;
+      await new Promise(r=>setTimeout(r,revealDelay));
+    }
+    const action = document.createElement('span'); action.className='metaAction'; action.textContent='Copy'; action.style.float='right'; action.style.marginLeft='8px'; action.style.cursor='pointer'; action.onclick = ()=>{ navigator.clipboard.writeText(fullText); action.textContent='Copied'; setTimeout(()=>action.textContent='Copy',1500); };
+    holder.appendChild(action);
+    return holder;
+  }
+
+  async function send(text){ if(!text) return; appendUser(text); document.getElementById('input').value=''; showThinking(); const answer = generateAnswer(text); const delay = typingDelayFor(answer); await sleep(Math.max(300, delay - answer.length*persona.streamChunkMs)); await streamReply(answer); if(Math.random()<0.12){ await sleep(250); await streamReply('\n' + pick(persona.signOffs)); } }
+
+  function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  function initUI(){
+    document.getElementById('send').addEventListener('click',()=>send(document.getElementById('input').value.trim()));
+    document.getElementById('input').addEventListener('keydown',e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(document.getElementById('input').value.trim()); } });
+
+    const seeds=['Hello!','What\'s your name?','What time is it?','i like synthwave','Teach me a CSS trick','how to deploy on github pages','Define algorithm','Why is my code slow?','Tell me a joke'];
+    const sEl = document.getElementById('suggestions'); seeds.forEach(s=>{ const b=document.createElement('button'); b.textContent=s; b.onclick=()=>send(s); sEl.appendChild(b); });
+
+    document.getElementById('themeBtn').addEventListener('click',()=>{ if(state.theme==='dark'){ document.documentElement.classList.add('light'); state.theme='light'; } else { document.documentElement.classList.remove('light'); state.theme='dark'; } });
+    document.getElementById('stylizeBtn').addEventListener('click',()=>{ state.stylize = !state.stylize; document.getElementById('stylizeBtn').textContent = state.stylize? 'Stylize ON' : 'Stylize Case'; });
+
+    document.getElementById('downloadBtn').addEventListener('click', downloadMemory);
+    document.getElementById('clearMemory').addEventListener('click', ()=>{ if(confirm('Clear saved memory (localStorage)?')){ clearMemory(); alert('Cleared.'); } });
+
+    document.getElementById('copyLast').addEventListener('click', ()=>{ const last = state.memory.history.slice().reverse().find(h=>h.role==='assistant'); if(last){ navigator.clipboard.writeText(last.text); alert('Last reply copied to clipboard'); } else alert('No assistant reply yet'); });
+    document.getElementById('downloadChat').addEventListener('click', downloadChat);
+    document.getElementById('clearChat').addEventListener('click', ()=>{ if(confirm('Clear chat from view (history in memory stays)?')){ chatEl.innerHTML=''; } });
+  }
+
+  function downloadMemory(){ const data = JSON.stringify(state.memory, null, 2); const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='pixelai_memory.json'; a.click(); URL.revokeObjectURL(url); }
+  function downloadChat(){ const data = JSON.stringify(state.memory.history, null, 2); const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='pixelai_chat_history.json'; a.click(); URL.revokeObjectURL(url); }
+
+  // init
+  load(); initUI();
+
+  // warm welcome
+  (async ()=>{ const welcome = `Hey! I\'m ${persona.name} — an offline chatbot. No APIs, no servers. Try: "What\'s your name?" or "Teach me a CSS trick." ${pickEmoji()}`; await streamReply(welcome); })();
+
+  return { send, state, save };
+})();
+```
+
+---
+
+### Instructions
+
+1. Create a new repo (e.g. `yourusername.github.io`) or add to any site repo.
+2. Save the three files to the repo root: `index.html`, `style.css`, `app.js`.
+3. Commit & push. In GitHub: Settings → Pages → Source → choose your branch (usually `main`) and `/ (root)` or `gh-pages` branch.
+4. Visit `https://yourusername.github.io/` to try the bot.
+
+If you want, I can create a downloadable ZIP with these three files, or prepare a README.md and sample `CNAME` for a custom domain. Want that?
