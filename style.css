@@ -1,74 +1,31 @@
-body {
-  background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
-  font-family: 'Segoe UI', Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-}
-.chat-container {
-  background: rgba(255,255,255,0.93);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  max-width: 400px;
-  margin: 60px auto 0;
-  padding: 32px 24px 16px 24px;
-  min-height: 500px;
+/* Typing indicator (dot-dot-dot bubble) */
+.typing-indicator {
   display: flex;
-  flex-direction: column;
-}
-h1 {
-  text-align: center;
-  margin: 0 0 18px 0;
-  font-weight: 700;
-  color: #346fa7;
-  letter-spacing: 1.2px;
-}
-.chat-log {
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 18px;
-  padding: 8px;
-  background: #f7fbff;
-  border-radius: 8px;
-  border: 1px solid #d3e0ea;
-  min-height: 220px;
-  max-height: 260px;
-}
-.message {
+  align-items: center;
   margin: 8px 0;
-  line-height: 1.5;
-  word-wrap: break-word;
+  min-width: 44px;
+  height: 26px;
+  padding: 6px 16px;
+  background: #e8f4fa;
+  border-radius: 16px;
+  width: fit-content;
+  box-shadow: 0 1px 3px rgba(52, 111, 167, 0.07);
 }
-.message.user {
-  text-align: right;
-  color: #1d4e89;
+
+.typing-indicator .dot {
+  height: 8px;
+  width: 8px;
+  margin: 0 2px;
+  background-color: #346fa7;
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 1.4s infinite both;
 }
-.message.bot {
-  text-align: left;
-  color: #346fa7;
-  font-style: italic;
-}
-#chat-form {
-  display: flex;
-  gap: 8px;
-}
-#user-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #bcdff1;
-  font-size: 16px;
-}
-button[type="submit"] {
-  padding: 10px 18px;
-  background: #5dade2;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-button[type="submit"]:hover {
-  background: #2980b9;
+
+.typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(1); }
+  40% { transform: scale(1.6); }
 }
