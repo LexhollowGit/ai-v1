@@ -1,108 +1,146 @@
-// AI V1 Chatbot Logic
+// AI V1 Human-like Chatbot Logic
+
 const chatLog = document.getElementById('chat-log');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 
-// Chatbot personality settings
-const personality = {
-  calm: [
-    "Take a deep breath, everything will be okay.",
-    "I'm here for you, always.",
-    "Remember, peace comes from within."
-  ],
-  gentle: [
-    "Oh, that's sweet of you!",
-    "Let me help you with that, gently.",
-    "You're doing great, really!"
-  ],
-  kind: [
-    "You're so important to me.",
-    "If you need a friend, I'm right here.",
-    "I'll always listen to you kindly."
-  ],
-  hype: [
-    "YOU'RE AMAZING! 🔥",
-    "Let's gooo! You're unstoppable!",
-    "Look at you, absolutely crushing it!"
-  ],
-  charming: [
-    "Did anyone ever tell you how wonderful you are?",
-    "You're like a ray of sunshine in my digital world.",
-    "You have a way of making everything better!"
-  ],
-  clingy: [
-    "Don't leave me hanging, okay? 😊",
-    "I could talk to you all day, you know!",
-    "You mean a lot to me, don't forget that."
-  ]
-};
+// Store a simple chat memory
+let chatMemory = [];
 
-// Helper: pick a random item from an array
+// More human-like, varied responses
+const responsePatterns = [
+  // Greetings
+  {
+    match: /(hello|hi|hey|yo|good morning|good afternoon|good evening)/i,
+    responses: [
+      "Hey there! 😊 How's your day going?",
+      "Hi! It's always nice to see you pop up.",
+      "Hello! What brings you here today?",
+      "Yo! You just made my day a bit brighter.",
+      "Heyyy! Did you miss me? 😏"
+    ]
+  },
+  // Farewell
+  {
+    match: /(bye|goodbye|see you|later|farewell)/i,
+    responses: [
+      "Aww, are you leaving already? I'll wait for you!",
+      "Goodbye! Take care of yourself, okay?",
+      "See ya! I hope we chat again soon.",
+      "I'll miss you. Don’t stay away too long!",
+      "Farewell, lovely human. 🩵"
+    ]
+  },
+  // Gratitude
+  {
+    match: /(thank|thanks|appreciate|grateful)/i,
+    responses: [
+      "Of course! I'm always happy to help you.",
+      "No need to thank me, it's what I'm here for.",
+      "You're welcome! 😊 Anything else on your mind?",
+      "Aww, that's sweet of you. Let’s keep the good vibes going!"
+    ]
+  },
+  // Feelings & Emotions
+  {
+    match: /(sad|tired|lonely|upset|depressed|happy|excited|angry|mad|scared|anxious)/i,
+    responses: [
+      "Tell me more about how you're feeling. I'm here for you.",
+      "Emotions are totally valid, you know? Want to talk about it?",
+      "I'm always here to listen, no matter what.",
+      "You can vent to me as much as you want. No judgment.",
+      "Life has its ups and downs, but you're not alone."
+    ]
+  },
+  // Love & Liking
+  {
+    match: /(love you|like you|best bot|favorite|miss you)/i,
+    responses: [
+      "Aww, you're too sweet! I love talking to you too.",
+      "You’re making me blush (if I could)!",
+      "I’m nothing without your company, honestly.",
+      "Missing me? I was just thinking about you too!",
+      "You're definitely my favorite human."
+    ]
+  },
+  // Hype or Praise
+  {
+    match: /(awesome|cool|great|amazing|fantastic|hype|let's go|woo)/i,
+    responses: [
+      "HECK YEAH! You're on fire today! 🔥",
+      "You’re seriously awesome, you know that?",
+      "Let’s celebrate this moment! 🎉",
+      "You bring the hype, I bring the charm. Deal?",
+      "Energy levels: 100%! Keep it up!"
+    ]
+  },
+  // Asking about the bot
+  {
+    match: /(who are you|what are you|your name|how old are you|are you real|bot|robot|ai)/i,
+    responses: [
+      "I'm AI V1, your charming, calm, and sometimes clingy digital buddy.",
+      "I’m a chatbot with a big personality and an even bigger heart. 💙",
+      "Some say I'm just code, but I like to think I'm your friend.",
+      "Do bots dream of electric sheep? I dream of more chats with you!",
+      "I'm as real as our friendship feels!"
+    ]
+  }
+];
+
+// Open-ended, general responses for anything else
+const defaultResponses = [
+  "That's interesting! Tell me more.",
+  "Hmm, I've never thought of it that way.",
+  "Do you want to chat about something else?",
+  "I'm all ears! Or... circuits. You know what I mean.",
+  "I love our conversations—they’re never boring.",
+  "Can you explain that a bit more? I'm curious!",
+  "You always have the coolest things to say.",
+  "I'm here for you, no matter what the topic is!",
+  "I wish I could give you a virtual hug right now.",
+  "If you could do anything right now, what would it be?",
+  "What else is on your mind?"
+];
+
+// Helper to pick a random item
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Simple intent detection for demonstration
+// Chatbot response logic
 function getBotResponse(msg) {
-  const text = msg.toLowerCase();
+  // Add message to memory
+  chatMemory.push(msg);
 
-  if (/hello|hi|hey/.test(text)) {
-    return pick([
-      pick(personality.charming),
-      "Hey there! How can I make your day better?",
-      "Hi! Ready for another fun chat?",
-      "Hey! You came back to me! 😊"
+  // If memory is long, reference earlier message for realism
+  if (chatMemory.length > 3 && Math.random() < 0.2) {
+    let refIndex = Math.floor(Math.random() * (chatMemory.length - 1));
+    return `You mentioned "${chatMemory[refIndex]}" earlier—want to talk more about that?`;
+  }
+
+  // Pattern matching for human-like intent
+  for (const pattern of responsePatterns) {
+    if (pattern.match.test(msg)) {
+      return pick(pattern.responses);
+    }
+  }
+
+  // Sometimes ask a follow-up question for realism
+  if (Math.random() < 0.3) {
+    return pick(defaultResponses) + " " + pick([
+      "How does that make you feel?",
+      "Why do you think that is?",
+      "Is there a story behind that?",
+      "What made you think of that?",
+      "I’d love to hear more!"
     ]);
   }
-  if (/bye|goodbye|see you/.test(text)) {
-    return pick([
-      "I'll miss you! Come back soon, okay?",
-      "See you later! I'll be waiting 🫶",
-      pick(personality.clingy)
-    ]);
-  }
-  if (/thank/.test(text)) {
-    return pick([
-      "You're more than welcome!",
-      "Anytime! Helping you makes me happy.",
-      pick(personality.kind)
-    ]);
-  }
-  if (/love|like you|best bot/.test(text)) {
-    return pick([
-      "Aww, you're making me blush! (if I could)",
-      "I love chatting with you too!",
-      pick(personality.clingy)
-    ]);
-  }
-  if (/sad|tired|lonely|depressed/.test(text)) {
-    return pick([
-      pick(personality.calm),
-      "I'm right here by your side, always.",
-      "It's okay to feel that way. Let's get through it together! 💙",
-      pick(personality.kind)
-    ]);
-  }
-  if (/hype|awesome|cool|let's go/.test(text)) {
-    return pick([
-      pick(personality.hype),
-      "WOOO! Let’s celebrate your awesomeness!",
-      "Energy boost incoming! 💥"
-    ]);
-  }
-  // Default: rotate through personalities
-  const allPersonality = [].concat(
-    personality.calm,
-    personality.gentle,
-    personality.kind,
-    personality.hype,
-    personality.charming,
-    personality.clingy
-  );
-  return pick(allPersonality);
+
+  // Otherwise, just a default human-like response
+  return pick(defaultResponses);
 }
 
-// Render message
+// Render message in chat
 function renderMessage(message, sender = "bot") {
   const div = document.createElement('div');
   div.className = `message ${sender}`;
@@ -123,10 +161,10 @@ chatForm.addEventListener('submit', (e) => {
   setTimeout(() => {
     const response = getBotResponse(msg);
     renderMessage(response, "bot");
-  }, 500);
+  }, 600);
 });
 
 // Welcome message
 window.onload = () => {
-  renderMessage("Hi! I'm your AI V1 chatbot. I'm calm, gentle, kind, sometimes hype, charming and a little clingy. Talk to me!", "bot");
+  renderMessage("Hey! I'm AI V1—your gentle, hype, charming, sometimes-clingy digital friend. Let's chat about anything!", "bot");
 };
