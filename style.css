@@ -116,18 +116,28 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 5px;
   cursor: move;
   font-size: 14px;
 }
-.title-bar .close {
+
+.window-controls {
+  display: flex;
+  gap: 5px;
+}
+.window-controls button {
   background: none;
   border: none;
   color: white;
   font-size: 14px;
   cursor: pointer;
+  width: 30px;
+  height: 25px;
 }
-.title-bar .close:hover {
+.window-controls button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.window-controls .close:hover {
   background: rgba(255, 0, 0, 0.7);
 }
 
@@ -148,4 +158,35 @@ textarea {
 }
 iframe {
   border: none;
+  width: 100%;
+  height: 100%;
 }
+
+/* Resizers for resizing windows */
+.resizer {
+  position: absolute;
+  background: transparent;
+}
+.resizer.n, .resizer.s {
+  height: 5px;
+  left: 0; right: 0;
+  cursor: ns-resize;
+}
+.resizer.e, .resizer.w {
+  width: 5px;
+  top: 0; bottom: 0;
+  cursor: ew-resize;
+}
+.resizer.n { top: -2px; }
+.resizer.s { bottom: -2px; }
+.resizer.e { right: -2px; }
+.resizer.w { left: -2px; }
+
+.resizer.nw, .resizer.ne, .resizer.sw, .resizer.se {
+  width: 10px;
+  height: 10px;
+}
+.resizer.nw { top: -2px; left: -2px; cursor: nwse-resize; }
+.resizer.ne { top: -2px; right: -2px; cursor: nesw-resize; }
+.resizer.sw { bottom: -2px; left: -2px; cursor: nesw-resize; }
+.resizer.se { bottom: -2px; right: -2px; cursor: nwse-resize; }
