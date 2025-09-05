@@ -2,25 +2,459 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI V1 - Your Personal Chatbot</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PixelAI — GitHub Pages Offline Chatbot</title>
+  <style>
+    :root {
+      --bg: #0f1226;
+      --panel: #161a36;
+      --accent: #7c5cff;
+      --accent-2: #22d3ee;
+      --text: #e6e6f0;
+      --muted: #aab;
+      --user: #3b82f6;
+      --bot: #7c5cff;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, #1a1f47 0%, var(--bg) 50%);
+      color: var(--text);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      padding: 16px;
+    }
+    header {
+      display: flex; align-items: center; gap: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0));
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 12px 16px;
+      border-radius: 16px;
+      backdrop-filter: blur(6px);
+    }
+    header .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+    header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: 0.3px; }
+    header p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    #chat {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 16px;
+      overflow: auto;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .bubble {
+      max-width: min(78ch, 90%);
+      padding: 10px 14px;
+      border-radius: 16px;
+      margin: 6px 0;
+      line-height: 1.35;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .from-user { margin-left: auto; background: linear-gradient(180deg, rgba(59,130,246,0.18), rgba(59,130,246,0.10)); border-color: rgba(59,130,246,0.3); }
+    .from-bot { margin-right: auto; background: linear-gradient(180deg, rgba(124,92,255,0.22), rgba(124,92,255,0.10)); border-color: rgba(124,92,255,0.35); }
+
+    .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    #input {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+      outline: none; border-radius: 14px; padding: 12px 14px; font-size: 15px;
+    }
+    #send {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #0b0b14; border: none; font-weight: 800; letter-spacing: .3px;
+      padding: 0 16px; border-radius: 12px; cursor: pointer;
+      box-shadow: 0 6px 18px rgba(124,92,255,.35), inset 0 1px 0 rgba(255,255,255,.25);
+    }
+    #send:active { transform: translateY(1px); }
+
+    .typing { display: inline-flex; align-items: center; gap: 6px; }
+    .typing .dot { width: 6px; height: 6px; border-radius: 50%; background: #cfd1ff; opacity: .9; animation: bounce 1.3s infinite; }
+    .typing .dot:nth-child(2) { animation-delay: .15s; }
+    .typing .dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+    footer { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 12px; }
+    .pill { padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); }
+    .kb {
+      margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .kb button {
+      background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px; padding: 6px 10px; cursor: pointer; font-size: 12px;
+    }
+    .kb button:hover { background: rgba(255,255,255,0.1); }
+    .small { font-size: 12px; color: var(--muted); }
+  </style>
 </head>
 <body>
-  <div class="chat-container">
-    <h1>AI V1</h1>
-    <div id="chat-log" class="chat-log"></div>
-    <!-- Typing indicator -->
-    <div id="typing-indicator" class="typing-indicator" style="display:none;">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
+  <header>
+    <div class="dot" aria-hidden="true"></div>
+    <div>
+      <h1>PixelAI</h1>
+      <p class="small">Self‑contained, no APIs. Lives on GitHub Pages.</p>
     </div>
-    <form id="chat-form">
-      <input type="text" id="user-input" autocomplete="off" placeholder="Say something..." required />
-      <button type="submit">Send</button>
-    </form>
+  </header>
+
+  <main id="chat" aria-live="polite" aria-label="Chat messages"></main>
+
+  <div class="kb" id="suggestions"></div>
+
+  <div class="row">
+    <input id="input" type="text" placeholder="Type here… (no APIs needed)" autocomplete="off" />
+    <button id="send" aria-label="Send">Send</button>
   </div>
-  <script src="chatbot.js"></script>
+  
+  <footer>
+    <span class="pill">Mode: Offline • Personality: Quirky Helpful</span>
+    <span class="small">© Yours, on GitHub Pages</span>
+  </footer>
+
+  <script>
+  // -----------------------
+  // PixelAI — Offline Brain
+  // -----------------------
+  // No external APIs. All logic runs in the browser.
+
+  const PixelAI = (() => {
+    // Personality knobs (tweak freely)
+    const persona = {
+      name: "PixelAI",
+      vibe: ["quirky", "helpful", "slightly sassy"],
+      emoji: ["✨", "🤖", "💡", "🧠", "⚙️", "🚀"],
+      signOffs: [
+        "Need more deets? I gotchu.",
+        "Curiosity mode: always on.",
+        "Ping me with another one!",
+      ],
+      typingBaseMs: 500,      // base typing delay
+      typingPerCharMs: 25,     // additional per character
+      typingMaxMs: 2500        // cap
+    };
+
+    // Tiny memory (persists per tab session)
+    const memory = {
+      name: null,
+      likes: new Set(),
+      facts: new Map(),
+      history: [] // {role, text}
+    };
+
+    // Utility: normalize input for matching
+    function norm(s){
+      return s
+        .toLowerCase()
+        .replace(/[\p{P}\p{S}]/gu, " ") // drop punctuation/symbols
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    // Utility: Levenshtein distance for fuzzy matching
+    function editDistance(a, b){
+      const m = a.length, n = b.length;
+      const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));
+      for (let i=0;i<=m;i++) dp[i][0] = i;
+      for (let j=0;j<=n;j++) dp[0][j] = j;
+      for (let i=1;i<=m;i++){
+        for (let j=1;j<=n;j++){
+          const cost = a[i-1] === b[j-1] ? 0 : 1;
+          dp[i][j] = Math.min(
+            dp[i-1][j] + 1,
+            dp[i][j-1] + 1,
+            dp[i-1][j-1] + cost
+          );
+        }
+      }
+      return dp[m][n];
+    }
+
+    // Knowledge base: patterns -> responses (pick randomly)
+    // Case-insensitive via regex /i, also matched on normalized text
+    const KB = [
+      {
+        tag: "greeting",
+        patterns: [/^(hi|hello|hey|yo|sup)\b/i, /\bgood (morning|afternoon|evening)\b/i],
+        responses: [
+          "Hey there! ${emoji} What are we building today?",
+          "Hello! ${emoji} Ready to nerd out?",
+          "Heeey! ${emoji} Ask me anything—offline and speedy.",
+        ]
+      },
+      {
+        tag: "name_learn",
+        patterns: [/(?:i am|i'm|my name is)\s+([a-z\-\s']{2,})/i],
+        responses: [
+          "Nice to meet you, ${name}! ${emoji}",
+          "Locked in. I’ll call you ${name}. ${emoji}",
+          "Got it—${name} it is. ${emoji}"
+        ],
+        onMatch: (m) => { memory.name = capWords(m[1]); }
+      },
+      {
+        tag: "ask_name",
+        patterns: [/^(what'?s|what is) your name\b/i, /who are you\b/i],
+        responses: [
+          "I’m ${self}, an all‑local chat brain.",
+          "${self} here—100% client‑side. ${emoji}",
+          "Name’s ${self}. No servers, just vibes.",
+        ]
+      },
+      {
+        tag: "time",
+        patterns: [/\b(time|current time|what time is it)\b/i],
+        responses: [
+          () => `According to your device, it\'s ${new Date().toLocaleTimeString()} ${pick(["sharp","on the dot","ish"])}. ${pickEmoji()}`
+        ]
+      },
+      {
+        tag: "date",
+        patterns: [/\b(date|today|what day is it)\b/i],
+        responses: [
+          () => `Today is ${new Date().toLocaleDateString()}—mark the moment. ${pickEmoji()}`
+        ]
+      },
+      {
+        tag: "like_record",
+        patterns: [/i like\s+([a-z0-9\-\s']{2,})/i],
+        responses: [
+          "Adding ${topic} to your like list. Respect!",
+          "${topic}? Strong choice. Noted. ${emoji}",
+          "Logged that you like ${topic}. ${emoji}"
+        ],
+        onMatch: (m) => { memory.likes.add(capWords(m[1])); }
+      },
+      {
+        tag: "dev_help",
+        patterns: [/\b(html|css|javascript|js|git|github|pages|deploy)\b/i],
+        responses: [
+          "If you\'re deploying on GitHub Pages: push to <code>main</code>, then Settings → Pages → Source: <code>Deploy from a branch</code>. Need the steps?",
+          "JS tip: keep logic modular. Want me to draft a snippet?",
+          "CSS trick: start mobile-first, then layer enhancements. Shall we sketch a layout?"
+        ]
+      },
+      {
+        tag: "compliment",
+        patterns: [/\b(thanks|thank you|ty|nice|cool|great|awesome|pog)\b/i],
+        responses: [
+          "Happy to help! ${emoji}",
+          "Anytime—keep the questions coming.",
+          "My circuits are blushing. ${emoji}"
+        ]
+      }
+    ];
+
+    // Fallback templates → "specific" sounding generative answers (offline)
+    const templates = [
+      {
+        when: /^(what is|define|meaning of)\b/i,
+        make: (q) => `Here\'s a compact take on “${q}”: a concept with key parts, typical use, and one example. Offline mode can\'t fetch sources, but I can outline steps or analogies if you want.`
+      },
+      {
+        when: /^(how (do|to)|steps? to)\b/i,
+        make: (q) => `A quick plan for “${q}”: 1) clarify goal, 2) list required bits, 3) smallest demo, 4) iterate with feedback, 5) document. Want me to draft the checklist?`
+      },
+      {
+        when: /^(why|reason)\b/i,
+        make: (q) => `Likely causes for “${q}”: configuration, environment, assumptions, or edge-cases. We can isolate by toggling one variable at a time.`
+      },
+      {
+        when: /\?$/,
+        make: (q) => `Gut answer to “${q}”: it depends on context. Give me a tad more detail and I\'ll tune a precise walkthrough—still all offline.`
+      }
+    ];
+
+    function capWords(s){
+      return s.replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function pickEmoji(){ return pick(persona.emoji); }
+
+    function format(template, ctx={}){
+      return String(template)
+        .replace(/\$\{self\}/g, persona.name)
+        .replace(/\$\{emoji\}/g, pickEmoji())
+        .replace(/\$\{name\}/g, memory.name || "friend")
+        .replace(/\$\{topic\}/g, ctx.topic || "that");
+    }
+
+    function bestKBMatch(text){
+      const n = norm(text);
+      // 1) Regex direct hit
+      for (const item of KB){
+        for (const p of item.patterns){
+          const m = text.match(p);
+          if (m) return { item, match: m };
+        }
+      }
+      // 2) Fuzzy vs canned cues
+      const cues = ["hello","hey","what time is it","what day is it","who are you","thank you"];
+      const scored = cues.map(c => ({ c, d: editDistance(n, c) }));
+      scored.sort((a,b)=>a.d-b.d);
+      if (scored[0] && scored[0].d <= Math.ceil(n.length*0.4)){
+        const cue = scored[0].c;
+        // map cue → KB tag
+        const tagMap = {
+          "hello":"greeting", "hey":"greeting",
+          "what time is it":"time",
+          "what day is it":"date",
+          "who are you":"ask_name",
+          "thank you":"compliment"
+        };
+        const tag = tagMap[cue];
+        const item = KB.find(x=>x.tag===tag);
+        if (item) return { item, match: null };
+      }
+      return null;
+    }
+
+    function generate(text){
+      memory.history.push({role:'user', text});
+
+      // 1) Try KB patterns
+      const kb = bestKBMatch(text);
+      if (kb){
+        const { item, match } = kb;
+        if (item.onMatch && match) item.onMatch(match);
+        const respTpl = pick(item.responses);
+        const ctx = {};
+        if (item.tag === 'like_record' && match) ctx.topic = capWords(match[1]);
+        const resp = typeof respTpl === 'function' ? respTpl(text) : format(respTpl, ctx);
+        memory.history.push({role:'assistant', text: resp});
+        return resp;
+      }
+
+      // 2) Try templated "specific" answers
+      const t = templates.find(t => t.when.test(text));
+      if (t){
+        const q = text.replace(/\s+/g,' ').trim();
+        const resp = t.make(q);
+        memory.history.push({role:'assistant', text: resp});
+        return resp;
+      }
+
+      // 3) Last resort: reflective + clarifying, but still concrete
+      const hints = extractKeywords(text);
+      const resp = `Here\'s what I caught: ${hints.join(', ') || 'general query'}. ` +
+        `Tell me the exact goal, input, and expected output, and I\'ll craft steps—all offline. ${pickEmoji()}`;
+      memory.history.push({role:'assistant', text: resp});
+      return resp;
+    }
+
+    function extractKeywords(text){
+      const words = norm(text).split(' ');
+      const stop = new Set("i me my we our you your the a an and or to of for with on in at is are be this that it if as by from what how why who when where which do does did can will shall should could would".split(' '));
+      const uniq = [];
+      for (const w of words){ if (w && !stop.has(w) && !uniq.includes(w)) uniq.push(w); }
+      return uniq.slice(0, 7);
+    }
+
+    function typingDelayFor(text){
+      const ms = persona.typingBaseMs + Math.min(text.length * persona.typingPerCharMs, persona.typingMaxMs);
+      // add a little randomness (±15%)
+      const jitter = 0.15 * ms;
+      return Math.round(ms + (Math.random()*2*jitter - jitter));
+    }
+
+    // Public API
+    return { persona, memory, generate, typingDelayFor };
+  })();
+
+  // -----------------------
+  // UI Wiring: bubbles & input
+  // -----------------------
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('input');
+  const send = document.getElementById('send');
+  const suggestions = document.getElementById('suggestions');
+
+  function bubble(text, from='bot'){
+    const el = document.createElement('div');
+    el.className = `bubble from-${from === 'user' ? 'user' : 'bot'}`;
+    el.innerHTML = text;
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+    return el;
+  }
+
+  function typingBubble(){
+    const el = document.createElement('div');
+    el.className = 'bubble from-bot';
+    el.innerHTML = `<span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`;
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+    return el;
+  }
+
+  function sendUser(){
+    const text = input.value.trim();
+    if(!text) return;
+    bubble(escapeHtml(text), 'user');
+    input.value='';
+    input.focus();
+
+    const typer = typingBubble(); // show "generating" bubble
+
+    // Generate answer
+    const answer = PixelAI.generate(text);
+    const delay = PixelAI.typingDelayFor(answer);
+
+    setTimeout(() => {
+      typer.remove();
+      bubble(answer, 'bot');
+      // occasionally sign off with personality
+      if (Math.random() < 0.15) bubble(`<span class="small">${escapeHtml(pick(PixelAI.persona.signOffs))}</span>`, 'bot');
+    }, delay);
+  }
+
+  function escapeHtml(str){
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  send.addEventListener('click', sendUser);
+  input.addEventListener('keydown', (e)=>{
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendUser();
+    }
+  });
+
+  // Quick suggestions (randomized, case-insensitive matching supported by engine)
+  const seeds = [
+    'Hello!',
+    'What\'s your name?',
+    'What time is it?',
+    'i like synthwave',
+    'Teach me a CSS trick',
+    'how to deploy on github pages',
+    'Define algorithm',
+    'Why is my code slow?',
+  ];
+  seeds.forEach(s => {
+    const b = document.createElement('button');
+    b.textContent = s;
+    b.addEventListener('click', ()=>{ input.value = s; sendUser(); });
+    suggestions.appendChild(b);
+  });
+
+  // Warm welcome
+  bubble(`Hey! I\'m <b>${PixelAI.persona.name}</b>—a fully client‑side chatbot. <br> No APIs, no servers, just JavaScript. Ask me anything. ${pick(PixelAI.persona.emoji)}`);
+
+  </script>
 </body>
-</html> 
+</html>
