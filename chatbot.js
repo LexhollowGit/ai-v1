@@ -1,11 +1,12 @@
 let knowledge = [];
 
-// Load knowledge base safely
+// Load knowledge base
 fetch('knowledge.json')
   .then(response => response.json())
   .then(data => { knowledge = data; })
   .catch(err => {
     console.error("Failed to load knowledge.json", err);
+    knowledge = [];
   });
 
 function findKnowledge(query) {
@@ -33,13 +34,13 @@ function getBotResponse(msg) {
   return "Hmm, I don't know that yet. Want to teach me?";
 }
 
-// DOM Elements
+// DOM elements
 const chatLog = document.getElementById('chat-log');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 const typingIndicator = document.getElementById('typing-indicator');
 
-// Add user message to log
+// Add user message to chat
 function addUserMessage(msg) {
   const div = document.createElement('div');
   div.className = 'message user';
@@ -48,7 +49,7 @@ function addUserMessage(msg) {
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 
-// Add bot message to log
+// Add bot message to chat
 function addBotMessage(msg) {
   const div = document.createElement('div');
   div.className = 'message bot';
@@ -66,7 +67,7 @@ function hideTyping() {
   typingIndicator.style.display = 'none';
 }
 
-// Chat form handler
+// Handle chat submission
 chatForm.addEventListener('submit', function(event) {
   event.preventDefault();
   const msg = userInput.value.trim();
@@ -75,17 +76,18 @@ chatForm.addEventListener('submit', function(event) {
   userInput.value = '';
   showTyping();
 
-  // Wait for knowledge to load before replying
+  // Wait for knowledge to load (if not ready yet)
   const waitForKnowledge = () => {
     if (knowledge.length === 0) {
       setTimeout(waitForKnowledge, 100);
       return;
     }
+    // Simulate typing delay
     setTimeout(() => {
       hideTyping();
       const reply = getBotResponse(msg);
       addBotMessage(reply);
-    }, 900 + Math.random() * 800); // 0.9-1.7s delay
+    }, 1000 + Math.random() * 700); // 1-1.7s delay
   };
   waitForKnowledge();
 });
