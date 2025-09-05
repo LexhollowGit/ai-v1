@@ -32,12 +32,16 @@
     </div>
   </div>
 
-  <!-- App windows -->
+  <!-- App windows template -->
   <template id="window-template">
     <div class="window">
       <div class="title-bar">
         <span class="title"></span>
-        <button class="close">✖</button>
+        <div class="window-controls">
+          <button class="minimize">🗕</button>
+          <button class="maximize">🗖</button>
+          <button class="close">✖</button>
+        </div>
       </div>
       <div class="content"></div>
     </div>
