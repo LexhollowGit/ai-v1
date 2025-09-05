@@ -50,3 +50,23 @@
   <script src="app.js"></script>
 </body>
 </html>
+<div id="start-menu" class="hidden">
+  <div class="start-left">
+    <div class="user-profile">
+      <img src="https://i.imgur.com/2yaf2wb.png" alt="User" />
+      <span>User</span>
+    </div>
+    <div class="app-list">
+      <div class="menu-item" onclick="openApp('notepad')">Notepad</div>
+      <div class="menu-item" onclick="openApp('browser')">Browser</div>
+      <div class="menu-item" onclick="openApp('explorer')">File Explorer</div>
+      <div class="menu-item" onclick="openApp('settings')">Settings</div>
+    </div>
+  </div>
+  <div class="start-right">
+    <div class="tile big" onclick="openApp('notepad')">📝 Notepad</div>
+    <div class="tile small" onclick="openApp('browser')">🌐</div>
+    <div class="tile small" onclick="openApp('explorer')">📁</div>
+    <div class="tile big" onclick="openApp('settings')">⚙️ Settings</div>
+  </div>
+</div>
