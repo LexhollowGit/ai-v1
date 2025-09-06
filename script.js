@@ -3,7 +3,7 @@ const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 
 // Replace with your OpenAI API key (free tier)
-const API_KEY = "YOUR_API_KEY_HERE";
+const API_KEY = "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";
 
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keydown', e => { if(e.key==='Enter') sendMessage(); });
