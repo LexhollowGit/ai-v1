@@ -3,7 +3,7 @@ const startBtn = document.getElementById('start-btn');
 const startMenu = document.getElementById('start-menu');
 const clock = document.getElementById('clock');
 
-// Update clock every second
+// 🕒 Update clock every second
 function updateClock() {
   clock.textContent = new Date().toLocaleTimeString([], {
     hour: '2-digit',
@@ -13,7 +13,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// Toggle start menu
+// 🪟 Toggle start menu
 startBtn.addEventListener('click', () => {
   startMenu.classList.toggle('hidden');
 });
@@ -22,13 +22,14 @@ startBtn.addEventListener('click', () => {
 document.querySelectorAll('[data-app]').forEach(el => {
   el.addEventListener('dblclick', () => openApp(el.dataset.app));
   el.addEventListener('click', () => {
-    if (el.classList.contains('menu-item')) {
+    if (el.classList.contains('menu-item') || el.classList.contains('tile')) {
       openApp(el.dataset.app);
       startMenu.classList.add('hidden');
     }
   });
 });
 
+// 📂 Open App
 function openApp(app) {
   const template = document.getElementById('window-template');
   const win = template.content.cloneNode(true).children[0];
@@ -37,20 +38,54 @@ function openApp(app) {
 
   if (app === 'notepad') {
     title.textContent = 'Notepad';
-    content.innerHTML = '<textarea></textarea>';
+    content.innerHTML = `<textarea style="width:100%;height:100%;"></textarea>`;
   }
-  if (app === 'browser') {
+  else if (app === 'browser') {
     title.textContent = 'Browser';
-    content.innerHTML = '<iframe src="https://example.com"></iframe>';
+    content.innerHTML = `
+      <div style="display:flex;flex-direction:column;height:100%;">
+        <div style="padding:5px;background:#eee;display:flex;gap:5px;">
+          <input id="browser-url" type="text" placeholder="Enter URL or search..." style="flex:1;padding:5px;">
+          <button id="browser-go">Go</button>
+        </div>
+        <iframe id="browser-frame" src="https://www.bing.com" style="flex:1;border:none;"></iframe>
+      </div>
+    `;
+
+    // Add search functionality
+    const goBtn = content.querySelector('#browser-go');
+    const urlInput = content.querySelector('#browser-url');
+    const iframe = content.querySelector('#browser-frame');
+
+    goBtn.addEventListener('click', () => {
+      let url = urlInput.value.trim();
+      if (!url.startsWith('http')) {
+        url = "https://www.bing.com/search?q=" + encodeURIComponent(url);
+      }
+      iframe.src = url;
+    });
+  }
+  else if (app === 'explorer') {
+    title.textContent = 'File Explorer';
+    content.innerHTML = `<div style="padding:10px;">📁 File Explorer (mock version)</div>`;
+  }
+  else if (app === 'settings') {
+    title.textContent = 'Settings';
+    content.innerHTML = `<div style="padding:10px;">⚙️ Settings Panel (mock version)</div>`;
+  }
+  else {
+    title.textContent = app;
+    content.innerHTML = `<div style="padding:10px;">🚧 App under construction</div>`;
   }
 
-  // Dragging
+  // 🖱️ Dragging
   let offsetX, offsetY, isDown = false;
   const bar = win.querySelector('.title-bar');
   bar.addEventListener('mousedown', e => {
     isDown = true;
     offsetX = e.clientX - win.offsetLeft;
     offsetY = e.clientY - win.offsetTop;
+    win.style.zIndex = Date.now(); // bring to front
   });
   document.addEventListener('mousemove', e => {
     if (isDown) {
@@ -60,7 +95,7 @@ function openApp(app) {
   });
   document.addEventListener('mouseup', () => isDown = false);
 
-  // Window controls
+  // 🖥️ Window controls
   const closeBtn = win.querySelector('.close');
   const minimizeBtn = win.querySelector('.minimize');
   const maximizeBtn = win.querySelector('.maximize');
@@ -69,7 +104,7 @@ function openApp(app) {
 
   minimizeBtn.addEventListener('click', () => {
     win.style.display = 'none';
-    // Restore when clicking taskbar icon later (can be extended)
+    // (later: restore via taskbar)
   });
 
   let isMaximized = false;
@@ -96,18 +131,18 @@ function openApp(app) {
     }
   });
 
-  // Add resizers
+  // 🖱️ Add resizers
   addResizers(win);
 
   // Default position
   win.style.top = '100px';
   win.style.left = '100px';
-  win.style.width = '400px';
-  win.style.height = '300px';
+  win.style.width = '500px';
+  win.style.height = '350px';
   desktop.appendChild(win);
 }
 
-// Add resizing functionality
+// 🖱️ Add resizing functionality
 function addResizers(win) {
   const resizers = ['nw', 'ne', 'sw', 'se', 'n', 's', 'e', 'w'];
   resizers.forEach(dir => {
@@ -124,8 +159,8 @@ function addResizers(win) {
 
       const onMouseMove = e => {
         if (!isResizing) return;
-
         const rect = win.getBoundingClientRect();
+
         if (dir.includes('e')) {
           win.style.width = rect.width + (e.clientX - prevX) + "px";
         }
@@ -151,22 +186,6 @@ function addResizers(win) {
       };
 
       document.addEventListener('mousemove', onMouseMove);
-function openApp(app) {
-  let appContent = "";
-  if (app === "notepad") {
-    appContent = "<textarea style='width:100%;height:100%;'></textarea>";
-  } else if (app === "browser") {
-    appContent = "<iframe src='https://example.com'></iframe>";
-  } else if (app === "explorer") {
-    appContent = "<div style='padding:10px;'>📁 File Explorer (mock)</div>";
-  } else if (app === "settings") {
-    appContent = "<div style='padding:10px;'>⚙️ Settings Panel (mock)</div>";
-  } else {
-    appContent = "<div style='padding:10px;'>🚧 App under construction</div>";
-  }
-  createWindow(app, appContent);
-}
-
       document.addEventListener('mouseup', onMouseUp);
     });
   });
