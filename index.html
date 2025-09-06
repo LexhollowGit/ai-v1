@@ -20,8 +20,8 @@
 
     <!-- Taskbar -->
     <div id="taskbar">
-      <!-- Windows logo as Start button -->
-      <div id="start-btn">🪟</div>
+      <!-- Start button with CSS Windows logo -->
+      <div id="start-btn"></div>
       <div id="taskbar-apps"></div>
       <div id="clock"></div>
     </div>
@@ -40,3 +40,30 @@
           <div class="menu-item" data-app="settings">Settings</div>
         </div>
       </div>
+      <div class="start-right">
+        <div class="tile big" data-app="notepad">📝 Notepad</div>
+        <div class="tile small" data-app="browser">🌐</div>
+        <div class="tile small" data-app="explorer">📁</div>
+        <div class="tile big" data-app="settings">⚙️ Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App windows template -->
+  <template id="window-template">
+    <div class="window">
+      <div class="title-bar">
+        <span class="title"></span>
+        <div class="window-controls">
+          <button class="minimize">🗕</button>
+          <button class="maximize">🗖</button>
+          <button class="close">✖</button>
+        </div>
+      </div>
+      <div class="content"></div>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
