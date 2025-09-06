@@ -58,14 +58,16 @@ function openApp(app){
       if(urlPattern.test(query)){
         if(!query.startsWith('http://') && !query.startsWith('https://')) query = 'https://' + query;
 
-        const safeSites = ['wikipedia.org','example.com'];
+        const iframeFriendlySites = ['wikipedia.org','example.com'];
         const domain = query.replace(/^https?:\/\//,'').split('/')[0];
-        if(safeSites.some(site => domain.includes(site))){
-          iframe.src = query;
+
+        if(iframeFriendlySites.some(site => domain.includes(site))){
+          iframe.src = query; // embed inside iframe
         } else {
-          window.open(query,'_blank');
+          window.open(query,'_blank'); // blocked sites open in new tab
         }
       } else {
+        // Treat as search query
         iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(query);
       }
     }
