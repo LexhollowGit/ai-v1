@@ -1,34 +1,3 @@
-const desktop = document.getElementById('desktop');
-const startBtn = document.getElementById('start-btn');
-const startMenu = document.getElementById('start-menu');
-const clock = document.getElementById('clock');
-
-// 🕒 Update clock every second
-function updateClock() {
-  clock.textContent = new Date().toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// 🪟 Toggle start menu
-startBtn.addEventListener('click', () => {
-  startMenu.classList.toggle('hidden');
-});
-
-// Open apps from desktop or start menu
-document.querySelectorAll('[data-app]').forEach(el => {
-  el.addEventListener('dblclick', () => openApp(el.dataset.app));
-  el.addEventListener('click', () => {
-    if (el.classList.contains('menu-item') || el.classList.contains('tile')) {
-      openApp(el.dataset.app);
-      startMenu.classList.add('hidden');
-    }
-  });
-});
-
 // 📂 Open App
 function openApp(app) {
   const template = document.getElementById('window-template');
@@ -45,24 +14,36 @@ function openApp(app) {
     content.innerHTML = `
       <div style="display:flex;flex-direction:column;height:100%;">
         <div style="padding:5px;background:#eee;display:flex;gap:5px;">
-          <input id="browser-url" type="text" placeholder="Enter URL or search..." style="flex:1;padding:5px;">
+          <input id="browser-url" type="text" placeholder="Search or enter URL" style="flex:1;padding:5px;">
           <button id="browser-go">Go</button>
         </div>
-        <iframe id="browser-frame" src="https://www.bing.com" style="flex:1;border:none;"></iframe>
+        <iframe id="browser-frame" src="https://www.google.com" style="flex:1;border:none;"></iframe>
       </div>
     `;
 
-    // Add search functionality
+    // Elements
     const goBtn = content.querySelector('#browser-go');
     const urlInput = content.querySelector('#browser-url');
     const iframe = content.querySelector('#browser-frame');
 
-    goBtn.addEventListener('click', () => {
-      let url = urlInput.value.trim();
-      if (!url.startsWith('http')) {
-        url = "https://www.bing.com/search?q=" + encodeURIComponent(url);
+    function loadPage() {
+      let query = urlInput.value.trim();
+      if (!query) return;
+
+      if (query.startsWith('http://') || query.startsWith('https://')) {
+        iframe.src = query;
       }
-      iframe.src = url;
+      else if (query.includes('.')) {
+        iframe.src = "https://" + query;
+      }
+      else {
+        iframe.src = "https://www.google.com/search?q=" + encodeURIComponent(query);
+      }
+    }
+
+    goBtn.addEventListener('click', loadPage);
+    urlInput.addEventListener('keydown', e => {
+      if (e.key === "Enter") loadPage();
     });
   }
   else if (app === 'explorer') {
@@ -85,7 +66,7 @@ function openApp(app) {
     isDown = true;
     offsetX = e.clientX - win.offsetLeft;
     offsetY = e.clientY - win.offsetTop;
-    win.style.zIndex = Date.now(); // bring to front
+    win.style.zIndex = Date.now();
   });
   document.addEventListener('mousemove', e => {
     if (isDown) {
@@ -104,7 +85,6 @@ function openApp(app) {
 
   minimizeBtn.addEventListener('click', () => {
     win.style.display = 'none';
-    // (later: restore via taskbar)
   });
 
   let isMaximized = false;
@@ -140,53 +120,4 @@ function openApp(app) {
   win.style.width = '500px';
   win.style.height = '350px';
   desktop.appendChild(win);
-}
-
-// 🖱️ Add resizing functionality
-function addResizers(win) {
-  const resizers = ['nw', 'ne', 'sw', 'se', 'n', 's', 'e', 'w'];
-  resizers.forEach(dir => {
-    const div = document.createElement('div');
-    div.classList.add('resizer', dir);
-    win.appendChild(div);
-
-    let isResizing = false;
-    div.addEventListener('mousedown', e => {
-      e.preventDefault();
-      isResizing = true;
-      let prevX = e.clientX;
-      let prevY = e.clientY;
-
-      const onMouseMove = e => {
-        if (!isResizing) return;
-        const rect = win.getBoundingClientRect();
-
-        if (dir.includes('e')) {
-          win.style.width = rect.width + (e.clientX - prevX) + "px";
-        }
-        if (dir.includes('s')) {
-          win.style.height = rect.height + (e.clientY - prevY) + "px";
-        }
-        if (dir.includes('w')) {
-          win.style.width = rect.width - (e.clientX - prevX) + "px";
-          win.style.left = rect.left + (e.clientX - prevX) + "px";
-        }
-        if (dir.includes('n')) {
-          win.style.height = rect.height - (e.clientY - prevY) + "px";
-          win.style.top = rect.top + (e.clientY - prevY) + "px";
-        }
-        prevX = e.clientX;
-        prevY = e.clientY;
-      };
-
-      const onMouseUp = () => {
-        isResizing = false;
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      };
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    });
-  });
 }
