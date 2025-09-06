@@ -1,68 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Windows 10 Simulator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chatbot</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.0.0/dist/transformers.min.js"></script>
 </head>
 <body>
-  <div id="desktop">
-    <!-- Desktop icons -->
-    <div class="icon" data-app="notepad">
-      <img src="https://img.icons8.com/fluency/48/notepad.png"/>
-      <span>Notepad</span>
-    </div>
-    <div class="icon" data-app="browser">
-      <img src="https://img.icons8.com/fluency/48/internet-explorer.png"/>
-      <span>Browser</span>
-    </div>
-
-    <!-- Taskbar -->
-    <div id="taskbar">
-      <div id="start-btn"></div>
-      <div id="taskbar-apps"></div>
-      <div id="clock"></div>
-    </div>
-
-    <!-- Start Menu -->
-    <div id="start-menu" class="hidden">
-      <div class="start-left">
-        <div class="user-profile">
-          <img src="https://i.imgur.com/2yaf2wb.png" alt="User" />
-          <span>User</span>
-        </div>
-        <div class="app-list">
-          <div class="menu-item" data-app="notepad">Notepad</div>
-          <div class="menu-item" data-app="browser">Browser</div>
-          <div class="menu-item" data-app="explorer">File Explorer</div>
-          <div class="menu-item" data-app="settings">Settings</div>
-        </div>
-      </div>
-      <div class="start-right">
-        <div class="tile big" data-app="notepad">📝<span>Notepad</span></div>
-        <div class="tile small" data-app="browser">🌐</div>
-        <div class="tile small" data-app="explorer">📁</div>
-        <div class="tile big" data-app="settings">⚙️<span>Settings</span></div>
-      </div>
+  <div id="chat-container">
+    <h1>AI</h1>
+    <div id="chat-output"></div>
+    <div id="chat-input-container">
+      <input type="text" id="chat-input" placeholder="Type your message...">
+      <button id="chat-send">Send</button>
     </div>
   </div>
-
-  <!-- App windows template -->
-  <template id="window-template">
-    <div class="window">
-      <div class="title-bar">
-        <span class="title"></span>
-        <div class="window-controls">
-          <button class="minimize">🗕</button>
-          <button class="maximize">🗖</button>
-          <button class="close">✖</button>
-        </div>
-      </div>
-      <div class="content"></div>
-    </div>
-  </template>
-
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
