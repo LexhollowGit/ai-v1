@@ -53,16 +53,31 @@ body {
   padding: 0 10px;
 }
 
+/* Windows logo Start button */
 #start-btn {
-  background: rgba(50, 50, 50, 0.9);
-  padding: 5px 12px;
-  border-radius: 4px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   margin-right: 10px;
-  user-select: none;
+  position: relative;
+}
+#start-btn::before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: white;
+  box-shadow: 
+    18px 0 0 white,
+    0 18px 0 white,
+    18px 18px 0 white;
 }
 #start-btn:hover {
-  background: rgba(80, 80, 80, 0.9);
+  background: rgba(80, 80, 80, 0.6);
+  border-radius: 4px;
 }
 
 #taskbar-apps {
@@ -72,29 +87,6 @@ body {
 #clock {
   margin-left: auto;
   font-size: 14px;
-}
-
-/* Start Menu */
-#start-menu {
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-  width: 200px;
-  background: rgba(40, 40, 40, 0.95);
-  color: white;
-  padding: 10px;
-  border-radius: 4px 4px 0 0;
-}
-.hidden {
-  display: none;
-}
-.menu-item {
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 3px;
-}
-.menu-item:hover {
-  background: rgba(80, 80, 80, 0.9);
 }
 
 /* Windows */
@@ -162,7 +154,7 @@ iframe {
   height: 100%;
 }
 
-/* Resizers for resizing windows */
+/* Resizers */
 .resizer {
   position: absolute;
   background: transparent;
@@ -204,6 +196,10 @@ iframe {
   border-radius: 4px 4px 0 0;
   box-shadow: 0 0 20px rgba(0,0,0,0.7);
   overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+.hidden {
+  display: none;
 }
 
 /* Left panel */
