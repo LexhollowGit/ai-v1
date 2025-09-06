@@ -44,27 +44,33 @@ function openApp(app){
           <input id="browser-url" type="text" placeholder="Search or enter URL">
           <button id="browser-go">Go</button>
         </div>
-        <div style="flex:1; display:flex; align-items:center; justify-content:center; color:#555;">
-          🌐 Opened pages will appear in a new tab
-        </div>
+        <iframe id="browser-frame" src="https://www.google.com"></iframe>
       </div>
     `;
     const goBtn = content.querySelector('#browser-go');
     const urlInput = content.querySelector('#browser-url');
+    const iframe = content.querySelector('#browser-frame');
 
     function loadPage(){
       let query = urlInput.value.trim();
       if(!query) return;
 
+      // Detect URL vs search
       const urlPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([\/?].*)?$/;
-
-      // If it looks like a URL
       if(urlPattern.test(query)){
         if(!query.startsWith('http://') && !query.startsWith('https://')) query = 'https://' + query;
-        window.open(query, '_blank');
+
+        // Safe sites that allow embedding
+        const safeSites = ['wikipedia.org','example.com'];
+        const domain = query.replace(/^https?:\/\//,'').split('/')[0];
+        if(safeSites.some(site => domain.includes(site))){
+          iframe.src = query; // embed inside window
+        } else {
+          window.open(query,'_blank'); // open new tab for blocked sites
+        }
       } else {
         // Treat as search query
-        window.open("https://www.google.com/search?q=" + encodeURIComponent(query), '_blank');
+        iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(query);
       }
     }
 
@@ -164,7 +170,7 @@ function addResizers(win){
       };
 
       const onMouseUp = () => { 
-        isResizing = false; 
+        isResizing=false; 
         document.removeEventListener('mousemove', onMouseMove); 
         document.removeEventListener('mouseup', onMouseUp); 
       };
