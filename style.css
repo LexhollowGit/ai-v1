@@ -9,13 +9,16 @@
 body {
   background: url("https://4kwallpapers.com/images/walls/thumbs_3t/733.jpg") no-repeat center center fixed;
   background-size: cover;
-  width: 100vw;
   height: 100vh;
   overflow: hidden;
 }
 
 /* Desktop */
-#desktop { position: relative; width: 100%; height: 100%; }
+#desktop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
 /* Icons */
 .icon {
@@ -26,7 +29,10 @@ body {
   margin: 10px;
   display: inline-block;
 }
-.icon img { width: 48px; height: 48px; }
+.icon img {
+  width: 48px;
+  height: 48px;
+}
 .icon span {
   display: block;
   font-size: 12px;
@@ -40,14 +46,14 @@ body {
   left: 0;
   width: 100%;
   height: 40px;
-  background: rgba(30,30,30,0.95);
+  background: rgba(30, 30, 30, 0.95);
   display: flex;
   align-items: center;
-  padding: 0 10px;
   color: white;
+  padding: 0 10px;
 }
 
-/* Start button with Windows logo */
+/* Windows logo Start button */
 #start-btn {
   width: 35px;
   height: 35px;
@@ -59,91 +65,136 @@ body {
   position: relative;
 }
 #start-btn::before {
-  content:"";
-  display:block;
-  width:12px;
-  height:12px;
-  background:white;
-  box-shadow: 14px 0 0 white, 0 14px 0 white, 14px 14px 0 white;
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: white;
+  box-shadow: 
+    18px 0 0 white,
+    0 18px 0 white,
+    18px 18px 0 white;
 }
 #start-btn:hover {
-  background: rgba(80,80,80,0.6);
-  border-radius:4px;
+  background: rgba(80, 80, 80, 0.6);
+  border-radius: 4px;
 }
 
 #taskbar-apps { flex: 1; }
-#clock { font-size: 14px; }
+#clock { margin-left: auto; font-size: 14px; }
 
-/* Window */
+/* Windows */
 .window {
   position: absolute;
+  width: 400px;
+  height: 300px;
   background: white;
   border: 1px solid #333;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 .title-bar {
-  height:30px;
-  background: linear-gradient(to right,#0078D7,#005A9E);
-  color:white;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 5px;
-  cursor:move;
-  font-size:14px;
+  height: 30px;
+  background: linear-gradient(to right, #0078D7, #005A9E);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  cursor: move;
+  font-size: 14px;
 }
 
-.window-controls { display:flex; gap:5px; }
+.window-controls { display: flex; gap: 5px; }
 .window-controls button {
-  width:30px; height:25px; background:none; border:none; color:white; cursor:pointer; font-size:14px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  width: 30px;
+  height: 25px;
 }
-.window-controls button:hover { background: rgba(255,255,255,0.2);}
-.window-controls .close:hover { background: rgba(255,0,0,0.7); }
+.window-controls button:hover { background: rgba(255, 255, 255, 0.2); }
+.window-controls .close:hover { background: rgba(255, 0, 0, 0.7); }
 
-.window .content { width:100%; height:calc(100%-30px); padding:5px; overflow:auto; background:white; }
-textarea { width:100%; height:100%; border:none; outline:none; resize:none; font-family:Consolas,monospace; font-size:14px; }
-iframe { width:100%; height:100%; border:none; }
+.window .content {
+  width: 100%;
+  height: calc(100% - 30px);
+  background: white;
+  padding: 5px;
+  overflow: auto;
+}
+
+textarea {
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: Consolas, monospace;
+  font-size: 14px;
+}
+iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+}
 
 /* Resizers */
-.resizer { position:absolute; background:transparent; }
-.resizer.n,.resizer.s { height:5px; left:0; right:0; cursor:ns-resize; }
-.resizer.e,.resizer.w { width:5px; top:0; bottom:0; cursor:ew-resize; }
-.resizer.nw,.resizer.ne,.resizer.sw,.resizer.se { width:10px;height:10px; }
-.resizer.n { top:-2px; } .resizer.s { bottom:-2px; }
-.resizer.e { right:-2px; } .resizer.w { left:-2px; }
-.resizer.nw { top:-2px; left:-2px; cursor:nwse-resize; }
-.resizer.ne { top:-2px; right:-2px; cursor:nesw-resize; }
-.resizer.sw { bottom:-2px; left:-2px; cursor:nesw-resize; }
-.resizer.se { bottom:-2px; right:-2px; cursor:nwse-resize; }
+.resizer { position: absolute; background: transparent; }
+.resizer.n, .resizer.s { height: 5px; left: 0; right: 0; cursor: ns-resize; }
+.resizer.e, .resizer.w { width: 5px; top: 0; bottom: 0; cursor: ew-resize; }
+.resizer.n { top: -2px; }
+.resizer.s { bottom: -2px; }
+.resizer.e { right: -2px; }
+.resizer.w { left: -2px; }
+.resizer.nw, .resizer.ne, .resizer.sw, .resizer.se { width: 10px; height: 10px; }
+.resizer.nw { top: -2px; left: -2px; cursor: nwse-resize; }
+.resizer.ne { top: -2px; right: -2px; cursor: nesw-resize; }
+.resizer.sw { bottom: -2px; left: -2px; cursor: nesw-resize; }
+.resizer.se { bottom: -2px; right: -2px; cursor: nwse-resize; }
 
 /* Start Menu */
 #start-menu {
-  position:absolute; bottom:40px; left:0; width:600px; height:400px;
-  display:flex; background:rgba(32,32,32,0.95);
-  border-radius:4px 4px 0 0; box-shadow:0 0 20px rgba(0,0,0,0.7); overflow:hidden;
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 600px;
+  height: 400px;
+  background: rgba(32,32,32,0.95);
+  color: white;
+  display: flex;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 0 20px rgba(0,0,0,0.7);
+  overflow: hidden;
   backdrop-filter: blur(6px);
 }
-.hidden { display:none; }
+.hidden { display: none; }
 
-/* Start left */
-.start-left { width:200px; background:rgba(20,20,20,0.95); display:flex; flex-direction:column; border-right:1px solid #444;}
-.user-profile { display:flex; align-items:center; padding:10px; }
-.user-profile img { width:32px; height:32px; border-radius:50%; margin-right:10px; }
-.app-list { flex:1; overflow-y:auto; }
-.app-list .menu-item { padding:8px 10px; cursor:pointer; font-size:14px; }
+/* Left panel */
+.start-left {
+  width: 200px;
+  background: rgba(20,20,20,0.95);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #444;
+}
+.user-profile { display: flex; align-items: center; padding: 10px; }
+.user-profile img { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; }
+.app-list { flex: 1; overflow-y: auto; }
+.app-list .menu-item { padding: 8px 10px; cursor: pointer; font-size: 14px; }
 .app-list .menu-item:hover { background: rgba(80,80,80,0.9); }
 
-/* Start right */
-.start-right { flex:1; display:grid; grid-template-columns:repeat(4,1fr); grid-gap:10px; padding:10px; }
-.tile { display:flex; align-items:center; justify-content:center; cursor:pointer; color:white; font-size:14px; border-radius:3px; text-align:center; transition:background 0.2s; }
-.tile.big { grid-column: span 2; grid-row: span 2; font-size:18px; background:#0078D7; }
-.tile.small { font-size:20px; background:#0078D7; }
-.tile:hover { background:#005A9E; }
-
-/* Browser */
-.browser-bar { display:flex; align-items:center; padding:5px; background:#eee; border-bottom:1px solid #ccc; }
-.browser-bar input { flex:1; padding:6px 10px; font-size:14px; border:1px solid #bbb; border-radius:4px; outline:none; }
-.browser-bar input:focus { border-color:#0078D7; box-shadow:0 0 2px #0078D
+/* Right panel - tiles */
+.start-right {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 60px;
+  grid-gap: 8px;
+  padding: 10px;
+}
+.tile { background: #0078D7; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; border-radius: 4px; text-align: center; transition: background 0.2s, transform 0.1s; user-select: none; }
+.tile:hover { background: #005A9E; transform: scale(1.05); }
+.tile.big { grid-column: span 2; grid-row: span 
