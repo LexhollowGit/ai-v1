@@ -1,31 +1,41 @@
-const chatOutput = document.getElementById('chat-output');
-const chatInput = document.getElementById('chat-input');
-const chatSend = document.getElementById('chat-send');
+const chatBox = document.getElementById('chat-box');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
 
-let model;
+// Replace with your OpenAI API key (free tier)
+const API_KEY = "YOUR_API_KEY_HERE";
 
-// Load GPT-2 model
-(async () => {
-  chatOutput.innerHTML += `<div>Loading AI model... please wait.</div>`;
-  model = await window.transformers.pipeline('text-generation', 'gpt2');
-  chatOutput.innerHTML += `<div>AI is ready!</div>`;
-})();
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keydown', e => { if(e.key==='Enter') sendMessage(); });
 
-async function sendMessage() {
-  const message = chatInput.value.trim();
-  if (!message || !model) return;
-
-  chatOutput.innerHTML += `<div><b>You:</b> ${message}</div>`;
-  chatInput.value = '';
-  chatOutput.scrollTop = chatOutput.scrollHeight;
-
-  chatOutput.innerHTML += `<div><b>AI:</b> ...thinking...</div>`;
-  chatOutput.scrollTop = chatOutput.scrollHeight;
-
-  const response = await model(message, { max_length: 50 });
-  chatOutput.innerHTML = chatOutput.innerHTML.replace('...thinking...', response[0].generated_text);
-  chatOutput.scrollTop = chatOutput.scrollHeight;
+function appendMessage(sender, text){
+    const div = document.createElement('div');
+    div.classList.add('chat-message', sender);
+    div.textContent = text;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-chatSend.addEventListener('click', sendMessage);
-chatInput.addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
+async function sendMessage(){
+    const message = userInput.value.trim();
+    if(!message) return;
+    appendMessage('user', message);
+    userInput.value = '';
+
+    // Call OpenAI API
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":`Bearer ${API_KEY}`
+        },
+        body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages:[{role:"user", content: message}],
+            temperature:0.7
+        })
+    });
+    const data = await response.json();
+    const botReply = data.choices[0].message.content;
+    appendMessage('bot', botReply);
+}
