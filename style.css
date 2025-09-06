@@ -151,6 +151,7 @@ textarea {
   padding: 5px;
   background: #f1f1f1;
   border-bottom: 1px solid #ccc;
+  flex-shrink: 0;
 }
 .browser-bar input {
   flex: 1;
@@ -180,6 +181,7 @@ iframe#browser-frame {
   flex: 1;
   width: 100%;
   border: none;
+  min-height: 0;
 }
 
 /* Resizers */
