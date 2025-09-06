@@ -5,7 +5,7 @@ const clock = document.getElementById('clock');
 
 // 🕒 Clock update
 function updateClock() {
-  clock.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  clock.textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -31,9 +31,10 @@ function openApp(app){
   const title = win.querySelector('.title');
   const content = win.querySelector('.content');
 
+  // --- App content ---
   if(app === 'notepad'){
     title.textContent = 'Notepad';
-    content.innerHTML = `<textarea></textarea>`;
+    content.innerHTML = `<textarea style="width:100%;height:100%;"></textarea>`;
   }
   else if(app === 'browser'){
     title.textContent = 'Browser';
@@ -51,15 +52,15 @@ function openApp(app){
     const iframe = content.querySelector('#browser-frame');
 
     function loadPage(){
-      const query = urlInput.value.trim();
-      if(!query) return;
-      if(query.startsWith('http://') || query.startsWith('https://')) iframe.src = query;
-      else if(query.includes('.')) iframe.src = 'https://' + query;
-      else iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+      let q = urlInput.value.trim();
+      if(!q) return;
+      if(q.startsWith('http://') || q.startsWith('https://')) iframe.src = q;
+      else if(q.includes('.')) iframe.src = 'https://' + q;
+      else iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(q);
     }
 
     goBtn.addEventListener('click', loadPage);
-    urlInput.addEventListener('keydown', e => { if(e.key === "Enter") loadPage(); });
+    urlInput.addEventListener('keydown', e => { if(e.key === 'Enter') loadPage(); });
   }
   else if(app === 'explorer'){
     title.textContent = 'File Explorer';
@@ -74,7 +75,7 @@ function openApp(app){
     content.innerHTML = `<div style="padding:10px;">🚧 App under construction</div>`;
   }
 
-  // 🖱 Dragging
+  // --- Dragging ---
   let isDown = false, offsetX, offsetY;
   const bar = win.querySelector('.title-bar');
   bar.addEventListener('mousedown', e => {
@@ -91,7 +92,7 @@ function openApp(app){
   });
   document.addEventListener('mouseup', () => isDown = false);
 
-  // 🖥 Window controls
+  // --- Window Controls ---
   const closeBtn = win.querySelector('.close');
   const minimizeBtn = win.querySelector('.minimize');
   const maximizeBtn = win.querySelector('.maximize');
@@ -104,10 +105,10 @@ function openApp(app){
   maximizeBtn.addEventListener('click', () => {
     if(!isMaximized){
       prevState = { top: win.style.top, left: win.style.left, width: win.style.width, height: win.style.height };
-      win.style.top = "0px";
-      win.style.left = "0px";
-      win.style.width = "100%";
-      win.style.height = "calc(100% - 40px)";
+      win.style.top = '0px';
+      win.style.left = '0px';
+      win.style.width = '100%';
+      win.style.height = 'calc(100% - 40px)';
       isMaximized = true;
     } else {
       win.style.top = prevState.top;
@@ -118,10 +119,10 @@ function openApp(app){
     }
   });
 
-  // 🖱 Resizers
+  // --- Resizers ---
   addResizers(win);
 
-  // Default position
+  // --- Default position ---
   win.style.top = '100px';
   win.style.left = '100px';
   win.style.width = '500px';
@@ -129,7 +130,7 @@ function openApp(app){
   desktop.appendChild(win);
 }
 
-// Resizing function
+// --- Resizing Function ---
 function addResizers(win){
   const dirs = ['nw','ne','sw','se','n','s','e','w'];
   dirs.forEach(dir => {
@@ -153,66 +154,14 @@ function addResizers(win){
         prevX = e.clientX; prevY = e.clientY;
       };
 
-      const onMouseUp = () => { isResizing=false; document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); };
+      const onMouseUp = () => { 
+        isResizing = false; 
+        document.removeEventListener('mousemove', onMouseMove); 
+        document.removeEventListener('mouseup', onMouseUp); 
+      };
+
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     });
   });
 }
-const desktop = document.getElementById('desktop');
-const startBtn = document.getElementById('start-btn');
-const startMenu = document.getElementById('start-menu');
-const clock = document.getElementById('clock');
-
-// Clock
-function updateClock() {
-  clock.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-}
-setInterval(updateClock,1000); updateClock();
-
-// Start menu toggle
-startBtn.addEventListener('click',()=>startMenu.classList.toggle('hidden'));
-
-// Desktop icons & start menu apps
-document.querySelectorAll('[data-app]').forEach(el=>{
-  el.addEventListener('dblclick',()=>openApp(el.dataset.app));
-  el.addEventListener('click',()=>{
-    if(el.classList.contains('menu-item')||el.classList.contains('tile')){
-      openApp(el.dataset.app);
-      startMenu.classList.add('hidden');
-    }
-  });
-});
-
-function openApp(app){
-  const template=document.getElementById('window-template');
-  const win=template.content.cloneNode(true).children[0];
-  const title=win.querySelector('.title');
-  const content=win.querySelector('.content');
-
-  if(app==='notepad'){
-    title.textContent='Notepad';
-    content.innerHTML=`<textarea style="width:100%;height:100%;"></textarea>`;
-  }
-  else if(app==='browser'){
-    title.textContent='Browser';
-    content.innerHTML=`
-      <div style="display:flex;flex-direction:column;height:100%;">
-        <div class="browser-bar">
-          <input id="browser-url" type="text" placeholder="Search or enter URL">
-          <button id="browser-go">Go</button>
-        </div>
-        <iframe id="browser-frame" src="https://www.google.com"></iframe>
-      </div>
-    `;
-    const goBtn=content.querySelector('#browser-go');
-    const urlInput=content.querySelector('#browser-url');
-    const iframe=content.querySelector('#browser-frame');
-    function loadPage(){
-      let q=urlInput.value.trim();
-      if(!q) return;
-      if(q.startsWith('http://')||q.startsWith('https://')) iframe.src=q;
-      else if(q.includes('.')) iframe.src='https://'+q;
-      else iframe.src='https://www.google.com/search?q='+encodeURIComponent(q);
-    }
-    goBtn.addEventListener('
