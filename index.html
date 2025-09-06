@@ -20,53 +20,23 @@
 
     <!-- Taskbar -->
     <div id="taskbar">
-      <div id="start-btn">⏺ Start</div>
+      <!-- Windows logo as Start button -->
+      <div id="start-btn">🪟</div>
       <div id="taskbar-apps"></div>
       <div id="clock"></div>
     </div>
 
-    <!-- Start menu -->
+    <!-- Start menu (real Win10 layout) -->
     <div id="start-menu" class="hidden">
-      <div class="menu-item" data-app="notepad">📝 Notepad</div>
-      <div class="menu-item" data-app="browser">🌐 Browser</div>
-    </div>
-  </div>
-
-  <!-- App windows template -->
-  <template id="window-template">
-    <div class="window">
-      <div class="title-bar">
-        <span class="title"></span>
-        <div class="window-controls">
-          <button class="minimize">🗕</button>
-          <button class="maximize">🗖</button>
-          <button class="close">✖</button>
+      <div class="start-left">
+        <div class="user-profile">
+          <img src="https://i.imgur.com/2yaf2wb.png" alt="User" />
+          <span>User</span>
+        </div>
+        <div class="app-list">
+          <div class="menu-item" data-app="notepad">Notepad</div>
+          <div class="menu-item" data-app="browser">Browser</div>
+          <div class="menu-item" data-app="explorer">File Explorer</div>
+          <div class="menu-item" data-app="settings">Settings</div>
         </div>
       </div>
-      <div class="content"></div>
-    </div>
-  </template>
-
-  <script src="app.js"></script>
-</body>
-</html>
-<div id="start-menu" class="hidden">
-  <div class="start-left">
-    <div class="user-profile">
-      <img src="https://i.imgur.com/2yaf2wb.png" alt="User" />
-      <span>User</span>
-    </div>
-    <div class="app-list">
-      <div class="menu-item" onclick="openApp('notepad')">Notepad</div>
-      <div class="menu-item" onclick="openApp('browser')">Browser</div>
-      <div class="menu-item" onclick="openApp('explorer')">File Explorer</div>
-      <div class="menu-item" onclick="openApp('settings')">Settings</div>
-    </div>
-  </div>
-  <div class="start-right">
-    <div class="tile big" onclick="openApp('notepad')">📝 Notepad</div>
-    <div class="tile small" onclick="openApp('browser')">🌐</div>
-    <div class="tile small" onclick="openApp('explorer')">📁</div>
-    <div class="tile big" onclick="openApp('settings')">⚙️ Settings</div>
-  </div>
-</div>
