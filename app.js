@@ -43,7 +43,7 @@ function openApp(app){
           <input id="browser-url" type="text" placeholder="Search or enter URL">
           <button id="browser-go">Go</button>
         </div>
-        <iframe id="browser-frame" src="https://www.google.com"></iframe>
+        <iframe id="browser-frame" src="https://duckduckgo.com" style="flex:1;width:100%;border:none;"></iframe>
       </div>
     `;
     const goBtn = content.querySelector('#browser-go');
@@ -57,18 +57,10 @@ function openApp(app){
       const urlPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([\/?].*)?$/;
       if(urlPattern.test(query)){
         if(!query.startsWith('http://') && !query.startsWith('https://')) query = 'https://' + query;
-
-        const iframeFriendlySites = ['wikipedia.org','example.com'];
-        const domain = query.replace(/^https?:\/\//,'').split('/')[0];
-
-        if(iframeFriendlySites.some(site => domain.includes(site))){
-          iframe.src = query; // embed inside iframe
-        } else {
-          window.open(query,'_blank'); // blocked sites open in new tab
-        }
+        iframe.src = query; // Try embedding directly
       } else {
         // Treat as search query
-        iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+        iframe.src = 'https://duckduckgo.com/?q=' + encodeURIComponent(query);
       }
     }
 
