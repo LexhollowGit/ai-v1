@@ -35,8 +35,7 @@ function openApp(app){
   if(app === 'notepad'){
     title.textContent = 'Notepad';
     content.innerHTML = `<textarea style="width:100%;height:100%;"></textarea>`;
-  }
-  else if(app === 'browser'){
+  } else if(app === 'browser'){
     title.textContent = 'Browser';
     content.innerHTML = `
       <div style="display:flex;flex-direction:column;height:100%;">
@@ -55,37 +54,31 @@ function openApp(app){
       let query = urlInput.value.trim();
       if(!query) return;
 
-      // Detect URL vs search
       const urlPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([\/?].*)?$/;
       if(urlPattern.test(query)){
         if(!query.startsWith('http://') && !query.startsWith('https://')) query = 'https://' + query;
 
-        // Safe sites that allow embedding
         const safeSites = ['wikipedia.org','example.com'];
         const domain = query.replace(/^https?:\/\//,'').split('/')[0];
         if(safeSites.some(site => domain.includes(site))){
-          iframe.src = query; // embed inside window
+          iframe.src = query;
         } else {
-          window.open(query,'_blank'); // open new tab for blocked sites
+          window.open(query,'_blank');
         }
       } else {
-        // Treat as search query
         iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(query);
       }
     }
 
     goBtn.addEventListener('click', loadPage);
     urlInput.addEventListener('keydown', e => { if(e.key === 'Enter') loadPage(); });
-  }
-  else if(app === 'explorer'){
+  } else if(app === 'explorer'){
     title.textContent = 'File Explorer';
     content.innerHTML = `<div style="padding:10px;">📁 File Explorer (mock version)</div>`;
-  }
-  else if(app === 'settings'){
+  } else if(app === 'settings'){
     title.textContent = 'Settings';
     content.innerHTML = `<div style="padding:10px;">⚙️ Settings Panel (mock version)</div>`;
-  }
-  else{
+  } else {
     title.textContent = app;
     content.innerHTML = `<div style="padding:10px;">🚧 App under construction</div>`;
   }
