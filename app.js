@@ -52,11 +52,17 @@ function openApp(app){
     const iframe = content.querySelector('#browser-frame');
 
     function loadPage(){
-      let q = urlInput.value.trim();
-      if(!q) return;
-      if(q.startsWith('http://') || q.startsWith('https://')) iframe.src = q;
-      else if(q.includes('.')) iframe.src = 'https://' + q;
-      else iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(q);
+      let query = urlInput.value.trim();
+      if(!query) return;
+
+      // Check if input looks like a URL (with or without protocol)
+      const urlPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([\/?].*)?$/;
+      if(urlPattern.test(query)){
+        iframe.src = query.startsWith('http://') || query.startsWith('https://') ? query : 'https://' + query;
+      } else {
+        // Treat as search query
+        iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+      }
     }
 
     goBtn.addEventListener('click', loadPage);
@@ -155,7 +161,7 @@ function addResizers(win){
       };
 
       const onMouseUp = () => { 
-        isResizing = false; 
+        isResizing=false; 
         document.removeEventListener('mousemove', onMouseMove); 
         document.removeEventListener('mouseup', onMouseUp); 
       };
