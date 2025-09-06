@@ -1,169 +1,31 @@
-const desktop = document.getElementById('desktop');
-const startBtn = document.getElementById('start-btn');
-const startMenu = document.getElementById('start-menu');
-const clock = document.getElementById('clock');
+const chatOutput = document.getElementById('chat-output');
+const chatInput = document.getElementById('chat-input');
+const chatSend = document.getElementById('chat-send');
 
-// 🕒 Clock update
-function updateClock() {
-  clock.textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-}
-setInterval(updateClock, 1000);
-updateClock();
+let model;
 
-// 🪟 Toggle Start Menu
-startBtn.addEventListener('click', () => startMenu.classList.toggle('hidden'));
+// Load GPT-2 model
+(async () => {
+  chatOutput.innerHTML += `<div>Loading AI model... please wait.</div>`;
+  model = await window.transformers.pipeline('text-generation', 'gpt2');
+  chatOutput.innerHTML += `<div>AI is ready!</div>`;
+})();
 
-// Open apps from desktop or start menu
-document.querySelectorAll('[data-app]').forEach(el => {
-  el.addEventListener('dblclick', () => openApp(el.dataset.app));
-  el.addEventListener('click', () => {
-    if(el.classList.contains('menu-item') || el.classList.contains('tile')){
-      openApp(el.dataset.app);
-      startMenu.classList.add('hidden');
-    }
-  });
-});
+async function sendMessage() {
+  const message = chatInput.value.trim();
+  if (!message || !model) return;
 
-// 📂 Open App Function
-function openApp(app){
-  const template = document.getElementById('window-template');
-  const win = template.content.cloneNode(true).children[0];
-  const title = win.querySelector('.title');
-  const content = win.querySelector('.content');
+  chatOutput.innerHTML += `<div><b>You:</b> ${message}</div>`;
+  chatInput.value = '';
+  chatOutput.scrollTop = chatOutput.scrollHeight;
 
-  // --- App content ---
-  if(app === 'notepad'){
-    title.textContent = 'Notepad';
-    content.innerHTML = `<textarea style="width:100%;height:100%;"></textarea>`;
-  } else if(app === 'browser'){
-    title.textContent = 'Browser';
-    content.innerHTML = `
-      <div style="display:flex;flex-direction:column;height:100%;">
-        <div class="browser-bar">
-          <input id="browser-url" type="text" placeholder="Search or enter URL">
-          <button id="browser-go">Go</button>
-        </div>
-        <iframe id="browser-frame" src="https://duckduckgo.com" style="flex:1;width:100%;border:none;"></iframe>
-      </div>
-    `;
-    const goBtn = content.querySelector('#browser-go');
-    const urlInput = content.querySelector('#browser-url');
-    const iframe = content.querySelector('#browser-frame');
+  chatOutput.innerHTML += `<div><b>AI:</b> ...thinking...</div>`;
+  chatOutput.scrollTop = chatOutput.scrollHeight;
 
-    function loadPage(){
-      let query = urlInput.value.trim();
-      if(!query) return;
-
-      const urlPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([\/?].*)?$/;
-      if(urlPattern.test(query)){
-        if(!query.startsWith('http://') && !query.startsWith('https://')) query = 'https://' + query;
-        iframe.src = query; // Try embedding directly
-      } else {
-        // Treat as search query
-        iframe.src = 'https://duckduckgo.com/?q=' + encodeURIComponent(query);
-      }
-    }
-
-    goBtn.addEventListener('click', loadPage);
-    urlInput.addEventListener('keydown', e => { if(e.key === 'Enter') loadPage(); });
-  } else if(app === 'explorer'){
-    title.textContent = 'File Explorer';
-    content.innerHTML = `<div style="padding:10px;">📁 File Explorer (mock version)</div>`;
-  } else if(app === 'settings'){
-    title.textContent = 'Settings';
-    content.innerHTML = `<div style="padding:10px;">⚙️ Settings Panel (mock version)</div>`;
-  } else {
-    title.textContent = app;
-    content.innerHTML = `<div style="padding:10px;">🚧 App under construction</div>`;
-  }
-
-  // --- Dragging ---
-  let isDown = false, offsetX, offsetY;
-  const bar = win.querySelector('.title-bar');
-  bar.addEventListener('mousedown', e => {
-    isDown = true;
-    offsetX = e.clientX - win.offsetLeft;
-    offsetY = e.clientY - win.offsetTop;
-    win.style.zIndex = Date.now();
-  });
-  document.addEventListener('mousemove', e => {
-    if(isDown){
-      win.style.left = (e.clientX - offsetX) + 'px';
-      win.style.top = (e.clientY - offsetY) + 'px';
-    }
-  });
-  document.addEventListener('mouseup', () => isDown = false);
-
-  // --- Window Controls ---
-  const closeBtn = win.querySelector('.close');
-  const minimizeBtn = win.querySelector('.minimize');
-  const maximizeBtn = win.querySelector('.maximize');
-
-  closeBtn.addEventListener('click', () => win.remove());
-  minimizeBtn.addEventListener('click', () => win.style.display = 'none');
-
-  let isMaximized = false;
-  let prevState = {};
-  maximizeBtn.addEventListener('click', () => {
-    if(!isMaximized){
-      prevState = { top: win.style.top, left: win.style.left, width: win.style.width, height: win.style.height };
-      win.style.top = '0px';
-      win.style.left = '0px';
-      win.style.width = '100%';
-      win.style.height = 'calc(100% - 40px)';
-      isMaximized = true;
-    } else {
-      win.style.top = prevState.top;
-      win.style.left = prevState.left;
-      win.style.width = prevState.width;
-      win.style.height = prevState.height;
-      isMaximized = false;
-    }
-  });
-
-  // --- Resizers ---
-  addResizers(win);
-
-  // --- Default position ---
-  win.style.top = '100px';
-  win.style.left = '100px';
-  win.style.width = '500px';
-  win.style.height = '350px';
-  desktop.appendChild(win);
+  const response = await model(message, { max_length: 50 });
+  chatOutput.innerHTML = chatOutput.innerHTML.replace('...thinking...', response[0].generated_text);
+  chatOutput.scrollTop = chatOutput.scrollHeight;
 }
 
-// --- Resizing Function ---
-function addResizers(win){
-  const dirs = ['nw','ne','sw','se','n','s','e','w'];
-  dirs.forEach(dir => {
-    const div = document.createElement('div');
-    div.classList.add('resizer', dir);
-    win.appendChild(div);
-
-    let isResizing = false;
-    div.addEventListener('mousedown', e => {
-      e.preventDefault();
-      isResizing = true;
-      let prevX = e.clientX, prevY = e.clientY;
-
-      const onMouseMove = e => {
-        if(!isResizing) return;
-        const rect = win.getBoundingClientRect();
-        if(dir.includes('e')) win.style.width = rect.width + (e.clientX - prevX) + 'px';
-        if(dir.includes('s')) win.style.height = rect.height + (e.clientY - prevY) + 'px';
-        if(dir.includes('w')) { win.style.width = rect.width - (e.clientX - prevX) + 'px'; win.style.left = rect.left + (e.clientX - prevX) + 'px'; }
-        if(dir.includes('n')) { win.style.height = rect.height - (e.clientY - prevY) + 'px'; win.style.top = rect.top + (e.clientY - prevY) + 'px'; }
-        prevX = e.clientX; prevY = e.clientY;
-      };
-
-      const onMouseUp = () => { 
-        isResizing=false; 
-        document.removeEventListener('mousemove', onMouseMove); 
-        document.removeEventListener('mouseup', onMouseUp); 
-      };
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    });
-  });
-}
+chatSend.addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
