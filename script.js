@@ -1,5 +1,4 @@
-// Setup Matter.js
-const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
+const { Engine, Render, Runner, Bodies, Composite, Composites, Constraint, Mouse, MouseConstraint } = Matter;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -27,20 +26,41 @@ const walls = [
 ];
 Composite.add(world, walls);
 
-// A bouncing ball
-const ball = Bodies.circle(300, 50, 20, {
-  restitution: 0.9,
-  render: { fillStyle: "tomato" }
-});
-Composite.add(world, ball);
+// 🟠 Soft circle (using particles + springs)
+const softBall = Composites.softBody(
+  200, 100,   // x, y
+  6, 6,       // columns, rows
+  5, 5,       // xSpacing, ySpacing
+  true,       // crossBrace
+  15,         // particle radius
+  {
+    restitution: 0.8,
+    render: { fillStyle: "tomato" }
+  },
+  {
+    stiffness: 0.2,
+    render: { visible: false }
+  }
+);
+Composite.add(world, softBall);
 
-// Some boxes to knock over
-for (let i = 0; i < 5; i++) {
-  const box = Bodies.rectangle(400, 200 - i * 40, 40, 40, {
+// 🟦 Squishy square (4x4 grid of particles with springs)
+const squishyBox = Composites.softBody(
+  400, 100,   // x, y
+  4, 4,       // columns, rows
+  5, 5,       // spacing
+  true,
+  15,
+  {
+    restitution: 0.6,
     render: { fillStyle: "skyblue" }
-  });
-  Composite.add(world, box);
-}
+  },
+  {
+    stiffness: 0.3,
+    render: { visible: false }
+  }
+);
+Composite.add(world, squishyBox);
 
 // 🎮 Mouse control
 const mouse = Mouse.create(render.canvas);
