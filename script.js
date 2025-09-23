@@ -1,5 +1,5 @@
 // Setup Matter.js
-const { Engine, Render, Runner, Bodies, Composite } = Matter;
+const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -41,3 +41,16 @@ for (let i = 0; i < 5; i++) {
   });
   Composite.add(world, box);
 }
+
+// 🎮 Mouse control
+const mouse = Mouse.create(render.canvas);
+const mouseConstraint = MouseConstraint.create(engine, {
+  mouse,
+  constraint: {
+    stiffness: 0.2,
+    render: { visible: false }
+  }
+});
+Composite.add(world, mouseConstraint);
+
+render.mouse = mouse;
