@@ -29,7 +29,7 @@ Composite.add(world, walls);
 
 // A bouncing ball
 const ball = Bodies.circle(300, 50, 20, {
-  restitution: 0.9, // bounciness
+  restitution: 0.9,
   render: { fillStyle: "tomato" }
 });
 Composite.add(world, ball);
