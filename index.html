@@ -1,17 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-<title>AI Chatbot</title>
+  <meta charset="UTF-8">
+  <title>Physics Game</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      font-family: sans-serif;
+    }
+    canvas {
+      border: 2px solid white;
+      background: #222;
+    }
+  </style>
 </head>
 <body>
-  <div class="chat-container">
-    <div class="chat-box" id="chat-box"></div>
-    <input type="text" id="user-input" placeholder="Type your message...">
-    <button id="send-btn">Send</button>
-  </div>
-<script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script>
+    // Setup Matter.js
+    const { Engine, Render, Runner, Bodies, Composite } = Matter;
+
+    const engine = Engine.create();
+    const { world } = engine;
+
+    const render = Render.create({
+      element: document.body,
+      engine: engine,
+      options: {
+        width: 600,
+        height: 400,
+        wireframes: false,
+        background: "#222"
+      }
+    });
+
+    Render.run(render);
+    Runner.run(Runner.create(), engine);
+
+    // Walls
+    const walls = [
+      Bodies.rectangle(300, 0, 600, 20, { isStatic: true }),
+      Bodies.rectangle(300, 400, 600, 20, { isStatic: true }),
+      Bodies.rectangle(0, 200, 20, 400, { isStatic: true }),
+      Bodies.rectangle(600, 200, 20, 400, { isStatic: true })
+    ];
+    Composite.add(world, walls);
+
+    // A bouncing ball
+    const ball = Bodies.circle(300, 50, 20, {
+      restitution: 0.9, // bounciness
+      render: { fillStyle: "tomato" }
+    });
+    Composite.add(world, ball);
+
+    // Some boxes to knock over
+    for (let i = 0; i < 5; i++) {
+      const box = Bodies.rectangle(400, 200 - i * 40, 40, 40, {
+        render: { fillStyle: "skyblue" }
+      });
+      Composite.add(world, box);
+    }
+  </script>
 </body>
 </html>
